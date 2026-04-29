@@ -162,7 +162,7 @@
 
   .country-path {
     fill: #ddd5c8; stroke: #c4bba9; stroke-width: 0.5;
-    vector-effect: non-scaling-stroke; cursor: pointer; transition: fill 0.15s;
+    vector-effect: non-scaling-stroke; cursor: url('favicon.svg') 16 25, pointer; transition: fill 0.15s;
   }
 
   .country-path:hover { fill: var(--hover-fill); }
@@ -170,7 +170,7 @@
   .country-path.map-assigned { fill: var(--assigned); stroke: var(--assigned-stroke); stroke-width: 0.7; }
   .country-path.map-assigned:hover { fill: #bfaf8a; }
   .country-path.map-selected.map-assigned { fill: var(--selected-country); stroke: #2d5245; }
-  .country-path.territory { cursor: pointer; }
+  .country-path.territory { cursor: url('favicon.svg') 16 25, pointer; }
 
   /* Pulsing highlight for "next" country */
   @keyframes pulse-glow {
@@ -183,7 +183,7 @@
     stroke-width: 1.5;
   }
 
-  .ocean { fill: #e8e3db; cursor: default; }
+  .ocean { fill: #e8e3db; cursor: url('favicon.svg') 16 25, default; }
   .graticule {
     fill: none; stroke: #d6d0c5; stroke-width: 0.3;
     stroke-dasharray: 2,2; vector-effect: non-scaling-stroke;
@@ -1525,10 +1525,6 @@ function buildResultsMap(results) {
       if (info.status === 'correct') return 'var(--correct-fill)';
       if (info.status === 'wrong') return 'var(--wrong-fill)';
       return 'var(--skipped-fill)';
-    })
-    .attr('cursor', d => {
-      const rawName = d.properties && d.properties.name;
-      return (INCLUDE_MAP[rawName] || TERRITORY_PARENT[rawName]) ? 'pointer' : 'default';
     })
     .on('mouseover', function(event, d) {
       const rawName = d.properties && d.properties.name;
