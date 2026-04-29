@@ -91,8 +91,6 @@
 
   .btn-finish { background: var(--accent); color: white; }
   .btn-finish:hover { background: var(--accent-hover); }
-  .btn-clear { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
-  .btn-clear:hover { background: var(--bg); }
 
   /* --- LAYOUT --- */
   .app-layout { display: flex; flex: 1; overflow: hidden; }
@@ -594,7 +592,6 @@
     </div>
   </div>
   <div class="header-right">
-    <button class="btn btn-clear" onclick="clearAll()">Clear All</button>
     <button class="btn btn-finish" onclick="finishQuiz()">Finish Quiz</button>
   </div>
 </header>
@@ -1270,22 +1267,6 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
-
-function clearAll() {
-  assignments = {};
-  reverseAssignments = {};
-  selectedMapId = null;
-  selectedListName = null;
-  sidebarFilter = 'all';
-  document.querySelectorAll('.sidebar-filter').forEach(b => b.classList.remove('active'));
-  document.querySelector('.sidebar-filter[data-filter="all"]').classList.add('active');
-  closePicker();
-  clearNextHighlight();
-  updateMapClasses();
-  updateCount();
-  g.selectAll('.country-path').classed('map-selected', false);
-  renderCountryList();
-}
 
 // ===== NEXT UNASSIGNED NAVIGATION (Geographic Order) =====
 let geoSortedFeatures = null; // lazily computed
