@@ -1849,9 +1849,18 @@ function submitSuggestion() {
   const text = document.getElementById('suggestionText').value.trim();
   if (!text) return;
 
-  // In a real app, this would send to a server
-  console.log('Suggestion submitted:', text);
+  fetch('https://formsubmit.co/ajax/nickeshnaur@gmail.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      suggestion: text,
+      _subject: 'New suggestion — World Map Test',
+      _template: 'box',
+      _captcha: 'false'
+    })
+  }).catch(err => console.error('Suggestion submit failed:', err));
 
+  document.getElementById('suggestionText').value = '';
   document.getElementById('suggestionText').style.display = 'none';
   document.getElementById('suggestionActions').style.display = 'none';
   document.getElementById('suggestionThanks').style.display = 'block';
