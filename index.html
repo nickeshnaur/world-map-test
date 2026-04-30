@@ -571,6 +571,63 @@
   }
 
   .toast.visible { opacity: 1; }
+
+  /* --- MOBILE --- */
+  @media (max-width: 768px) {
+    body { height: 100dvh; }
+
+    header { padding: 10px 14px; }
+    header h1 { font-size: 16px; letter-spacing: -0.2px; }
+    .header-left { gap: 10px; flex-wrap: wrap; min-width: 0; }
+    .progress-text { font-size: 12px; gap: 8px; }
+    .progress-bar-container { width: 70px; }
+    .btn { padding: 9px 14px; font-size: 12px; }
+
+    .app-layout { flex-direction: column; }
+    .map-area { flex: 0 0 55vh; min-height: 320px; }
+    .sidebar {
+      width: 100%; min-width: 0;
+      border-right: none; border-top: 1px solid var(--border);
+      flex: 1; min-height: 0;
+    }
+    .sidebar-instructions { display: none; }
+    .country-item { padding: 11px 12px; font-size: 14px; }
+    .sidebar-search input { padding: 10px 12px; font-size: 14px; }
+    .sidebar-filter { padding: 11px 4px; font-size: 12px; }
+
+    #map-svg { touch-action: none; }
+
+    .map-controls button { width: 40px; height: 40px; font-size: 18px; }
+    .next-nav-btn { padding: 10px 14px; font-size: 12px; }
+
+    .suggestion-btn { width: 44px; height: 44px; bottom: 16px; right: 16px; }
+    .suggestion-panel {
+      width: auto; right: 12px; left: 12px; bottom: 70px;
+      box-sizing: border-box; padding: 16px;
+    }
+
+    .country-picker { width: 240px; max-width: calc(100vw - 24px); }
+
+    .results-page { padding: 16px 10px; }
+    .results-header {
+      padding: 14px 16px; flex-direction: column; gap: 10px; align-items: stretch;
+    }
+    .results-header-left h2 { font-size: 22px; }
+    .results-actions { flex-wrap: wrap; gap: 6px; }
+    .btn-icon { padding: 8px 12px; font-size: 12px; }
+    .results-body { flex-direction: column; padding: 14px 16px; gap: 16px; }
+    .results-sidebar { width: 100%; min-width: 0; }
+    .results-detail-list { max-height: 280px; }
+
+    .confirm-card { padding: 20px 22px; }
+  }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 15px; }
+    .progress-bar-container { display: none; }
+    .header-left { gap: 8px; }
+    .map-area { flex: 0 0 52vh; min-height: 280px; }
+  }
 </style>
 </head>
 <body>
@@ -847,7 +904,9 @@ async function loadMap() {
     .scaleExtent([1, 12])
     .on('zoom', (event) => { g.attr('transform', event.transform); });
 
-  svgEl.attr('width', width).attr('height', height);
+  svgEl.attr('width', width).attr('height', height)
+       .attr('viewBox', `0 0 ${width} ${height}`)
+       .attr('preserveAspectRatio', 'xMidYMid meet');
   svgEl.call(zoomBehavior);
 
   g = svgEl.append('g');
