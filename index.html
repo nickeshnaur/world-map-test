@@ -1178,6 +1178,12 @@ async function loadMap() {
 
   let fitTarget = countries;
   if (view) {
+    const regionBbox = [[view.bbox[0][0], view.bbox[0][1]], [view.bbox[1][0], view.bbox[1][1]]];
+    // Strip MultiPolygon rings whose bbox doesn't overlap the region — kills France's
+    // overseas departments (French Guiana, Réunion, Mayotte) etc. that share a feature
+    // with the mainland.
+    countries.features = countries.features.map(f => filterFeatureRings(f, regionBbox));
+
     fitTarget = { type: 'Feature', geometry: { type: 'Polygon', coordinates: [[
       [view.bbox[0][0], view.bbox[0][1]],
       [view.bbox[1][0], view.bbox[0][1]],
@@ -1294,6 +1300,34 @@ async function loadMap() {
   document.querySelectorAll('.js-total-count').forEach(el => el.textContent = countryFeatures.length);
   renderCountryList();
   document.getElementById('loadingScreen').classList.add('hidden');
+}
+
+function ringBbox(ring) {
+  let xmin = Infinity, xmax = -Infinity, ymin = Infinity, ymax = -Infinity;
+  for (const [x, y] of ring) {
+    if (x < xmin) xmin = x;
+    if (x > xmax) xmax = x;
+    if (y < ymin) ymin = y;
+    if (y > ymax) ymax = y;
+  }
+  return [[xmin, ymin], [xmax, ymax]];
+}
+
+function bboxIntersects(b1, b2) {
+  return !(b1[1][0] < b2[0][0] || b1[0][0] > b2[1][0]
+        || b1[1][1] < b2[0][1] || b1[0][1] > b2[1][1]);
+}
+
+function filterFeatureRings(feature, regionBbox) {
+  if (!feature.geometry) return feature;
+  const geom = feature.geometry;
+  if (geom.type === 'MultiPolygon') {
+    const polys = geom.coordinates.filter(p =>
+      bboxIntersects(ringBbox(p[0]), regionBbox));
+    if (polys.length === 0) return feature; // keep original if filter would eliminate everything
+    return { ...feature, geometry: { type: 'MultiPolygon', coordinates: polys } };
+  }
+  return feature;
 }
 
 const REGION_VIEW = {
