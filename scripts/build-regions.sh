@@ -1,0 +1,60 @@
+#!/bin/bash
+set -e
+
+ROOT="/Users/eshnaur/Desktop/Junk Drawer/Digital Projects/World Map Test"
+SRC="$ROOT/index.html"
+
+build_region() {
+  local slug="$1"          # africa
+  local pageRegion="$2"    # Africa  (PAGE_REGION value)
+  local titleName="$3"     # Africa
+  local count="$4"         # 54
+  local keywords="$5"
+  local description="$6"
+
+  local outdir="$ROOT/$slug"
+  mkdir -p "$outdir"
+  cp "$SRC" "$outdir/index.html"
+
+  cd "$outdir"
+  sed -i '' \
+    -e "s|<title>World Map Test — Interactive Country Geography Quiz</title>|<title>${titleName} Map Quiz — Identify All ${count} ${pageRegion} Countries</title>|" \
+    -e "s|content=\"Test your geography knowledge with an interactive world map quiz. Click each country and identify it by name. Free, no sign-up, works on desktop and mobile.\"|content=\"${description}\"|" \
+    -e "s|content=\"world map quiz, country quiz, geography quiz, interactive map, identify countries, world geography test\"|content=\"${keywords}\"|" \
+    -e '/<meta name="google-site-verification"/d' \
+    -e "s|<link rel=\"canonical\" href=\"https://worldmaptest.com/\">|<link rel=\"canonical\" href=\"https://worldmaptest.com/${slug}/\">|" \
+    -e 's|href="favicon.svg"|href="/favicon.svg"|' \
+    -e "s|\"og:url\" content=\"https://worldmaptest.com/\"|\"og:url\" content=\"https://worldmaptest.com/${slug}/\"|" \
+    -e "s|\"twitter:url\" content=\"https://worldmaptest.com/\"|\"twitter:url\" content=\"https://worldmaptest.com/${slug}/\"|" \
+    -e "s|\"og:title\" content=\"World Map Test — Interactive Country Geography Quiz\"|\"og:title\" content=\"${titleName} Map Quiz — Identify All ${count} ${pageRegion} Countries\"|" \
+    -e "s|\"og:description\" content=\"Test your geography knowledge with an interactive world map quiz. Click each country and identify it by name.\"|\"og:description\" content=\"Free interactive quiz to identify all ${count} ${pageRegion} countries on a map.\"|" \
+    -e "s|\"twitter:title\" content=\"World Map Test — Interactive Country Geography Quiz\"|\"twitter:title\" content=\"${titleName} Map Quiz — ${count} Countries\"|" \
+    -e "s|\"twitter:description\" content=\"Test your geography knowledge with an interactive world map quiz.\"|\"twitter:description\" content=\"Free interactive quiz to identify all ${count} ${pageRegion} countries on a map.\"|" \
+    -e "s|cursor: url('cursor.svg')|cursor: url('/cursor.svg')|" \
+    -e "s|<!-- Google tag (gtag.js) -->|<script>window.PAGE_REGION = \"${pageRegion}\";</script>\\
+\\
+<!-- Google tag (gtag.js) -->|" \
+    index.html
+
+  echo "Built /$slug/"
+}
+
+build_region "europe"   "Europe"   "Europe"   "46" \
+  "europe map quiz, european country quiz, european geography quiz, countries of europe, europe map test" \
+  "Free interactive quiz to identify all 46 countries in Europe on a map. Click each country and name it. No sign-up. Works on mobile and desktop."
+
+build_region "africa"   "Africa"   "Africa"   "54" \
+  "africa map quiz, african country quiz, african geography quiz, countries of africa, africa map test" \
+  "Free interactive quiz to identify all 54 countries in Africa on a map. Click each country and name it. No sign-up. Works on mobile and desktop."
+
+build_region "asia"     "Asia"     "Asia"     "48" \
+  "asia map quiz, asian country quiz, asian geography quiz, countries of asia, asia map test" \
+  "Free interactive quiz to identify all 48 countries in Asia on a map. Click each country and name it. No sign-up. Works on mobile and desktop."
+
+build_region "americas" "Americas" "Americas" "35" \
+  "americas map quiz, north america quiz, south america quiz, american geography quiz, countries of the americas" \
+  "Free interactive quiz to identify all 35 countries in North and South America on a map. Click each country and name it. No sign-up. Works on mobile and desktop."
+
+build_region "oceania"  "Oceania"  "Oceania"  "14" \
+  "oceania map quiz, pacific country quiz, oceania geography quiz, countries of oceania, oceania map test" \
+  "Free interactive quiz to identify all 14 countries in Oceania on a map. Click each country and name it. No sign-up. Works on mobile and desktop."
