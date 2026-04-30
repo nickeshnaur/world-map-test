@@ -1185,13 +1185,14 @@ async function loadMap() {
     // with the mainland.
     countries.features = countries.features.map(f => filterFeatureRings(f, regionBbox));
 
-    fitTarget = { type: 'Feature', geometry: { type: 'Polygon', coordinates: [[
+    // Use MultiPoint corners (not a polygon) so d3.geoPath doesn't inflate the bounds
+    // by drawing geodesic-curved edges between corners.
+    fitTarget = { type: 'Feature', geometry: { type: 'MultiPoint', coordinates: [
       [view.bbox[0][0], view.bbox[0][1]],
       [view.bbox[1][0], view.bbox[0][1]],
       [view.bbox[1][0], view.bbox[1][1]],
       [view.bbox[0][0], view.bbox[1][1]],
-      [view.bbox[0][0], view.bbox[0][1]],
-    ]] } };
+    ] } };
   }
 
   projection = d3.geoNaturalEarth1();
