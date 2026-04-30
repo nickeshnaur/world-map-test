@@ -289,6 +289,8 @@
   .country-path.map-assigned { fill: var(--assigned); stroke: var(--assigned-stroke); stroke-width: 0.7; }
   .country-path.map-assigned:hover { fill: #bfaf8a; }
   .country-path.map-selected.map-assigned { fill: var(--selected-country); stroke: #2d5245; }
+  .country-path.territory { cursor: default; }
+  .country-path.territory:hover { fill: #ddd5c8; }
 
   /* Pulsing highlight for "next" country */
   @keyframes pulse-glow {
@@ -1208,30 +1210,20 @@ async function loadMap() {
     })
     .on('click', function(event, d) {
       if (!d.displayName) return;
+      if (d.isTerritory) return;
 
       // Capture click position relative to map area
       const mapRect = document.querySelector('.map-area').getBoundingClientRect();
       lastClickPos = { x: event.clientX - mapRect.left, y: event.clientY - mapRect.top };
 
-      if (d.isTerritory) {
-        const parentName = d.displayName;
-        const parentId = nameToCorrectId[parentName];
-        if (parentId !== undefined) {
-          selectOnMap(parentId, parentName);
-        }
-      } else {
-        selectOnMap(d.id, d.displayName);
-      }
+      selectOnMap(d.id, d.displayName);
     })
     .on('mouseover', function(event, d) {
       if (!d.displayName) return;
+      if (d.isTerritory) return;
       tooltip.style.display = 'block';
-      if (d.isTerritory) {
-        tooltip.textContent = 'Click to select';
-      } else {
-        const assigned = assignments[d.id];
-        tooltip.textContent = assigned ? `Assigned: ${assigned}` : 'Click to select';
-      }
+      const assigned = assignments[d.id];
+      tooltip.textContent = assigned ? `Assigned: ${assigned}` : 'Click to select';
     })
     .on('mousemove', function(event) {
       const mapRect = document.querySelector('.map-area').getBoundingClientRect();
