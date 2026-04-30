@@ -120,6 +120,13 @@
     border-bottom: 1px solid var(--border); line-height: 1.5; background: #faf8f4;
   }
 
+  .mobile-selection-hint {
+    display: none;
+    padding: 10px 14px; font-size: 13px; font-weight: 600;
+    color: white; background: var(--selected-country);
+    border-bottom: 1px solid var(--border); text-align: center;
+  }
+
   .sidebar-filters {
     display: flex; gap: 0; border-bottom: 1px solid var(--border);
   }
@@ -569,6 +576,8 @@
       flex: 0 0 32vh; min-height: 0;
     }
     .sidebar-instructions { display: none; }
+    .country-picker { display: none !important; }
+    .mobile-selection-hint.visible { display: block; }
     .country-item { padding: 11px 12px; font-size: 14px; }
     .sidebar-search input { padding: 10px 12px; font-size: 14px; }
     .sidebar-filter { padding: 11px 4px; font-size: 12px; }
@@ -639,6 +648,9 @@
     </div>
     <div class="sidebar-instructions">
       Click a country on the map, then pick a name to assign it.
+    </div>
+    <div class="mobile-selection-hint" id="mobileSelectionHint">
+      Tap a country name to assign
     </div>
     <div class="sidebar-filters" id="sidebarFilters">
       <button class="sidebar-filter active" data-filter="all">All</button>
@@ -1014,6 +1026,13 @@ let lastClickPos = null; // {x, y} relative to map-area
 
 function showPicker(mapId) {
   pickerTargetId = mapId;
+
+  // On mobile, skip the popup entirely — sidebar list handles assignment.
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    updateMobileSelectionHint();
+    return;
+  }
+
   const picker = document.getElementById('countryPicker');
   const searchInput = document.getElementById('pickerSearch');
   const mapArea = document.querySelector('.map-area');
@@ -1072,6 +1091,17 @@ function showPicker(mapId) {
 function closePicker() {
   document.getElementById('countryPicker').classList.remove('visible');
   pickerTargetId = null;
+  updateMobileSelectionHint();
+}
+
+function updateMobileSelectionHint() {
+  const hint = document.getElementById('mobileSelectionHint');
+  if (!hint) return;
+  if (selectedMapId === null) {
+    hint.classList.remove('visible');
+  } else {
+    hint.classList.add('visible');
+  }
 }
 
 let pickerFocusIndex = -1;
@@ -1212,6 +1242,7 @@ function updateSidebarFilterCounts() {
 }
 
 function renderCountryList() {
+  updateMobileSelectionHint();
   const search = document.getElementById('searchInput').value.toLowerCase();
   const listEl = document.getElementById('countryList');
   listEl.innerHTML = '';
