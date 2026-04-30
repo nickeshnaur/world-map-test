@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <title>World Map Test — Interactive Country Geography Quiz</title>
 <meta name="description" content="Test your geography knowledge with an interactive world map quiz. Click each country and identify it by name. Free, no sign-up, works on desktop and mobile.">
 <meta name="keywords" content="world map quiz, country quiz, geography quiz, interactive map, identify countries, world geography test">
@@ -52,6 +56,55 @@
   }
 }
 </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many countries are in the World Map Test quiz?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All 195 sovereign states recognized by the United Nations are included, along with major dependent territories grouped under their parent country."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is World Map Test free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The quiz is completely free, runs entirely in your browser, and does not require an account or sign-up."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the geography quiz work on mobile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The interface adapts to touch screens with pinch-to-zoom on the map and a search-driven country picker. It works on iPhone, Android, iPad, and desktop browsers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is my score calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each correctly identified country counts as one point. Your final score is the percentage of countries you correctly named out of the total. You can finish the quiz at any time, even with countries unassigned."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where does the country map data come from?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Country boundaries are from Natural Earth, a public-domain dataset, served via the world-atlas TopoJSON package."
+      }
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <style>
@@ -82,11 +135,13 @@
     font-family: 'Instrument Sans', sans-serif;
     background: var(--bg);
     color: var(--text);
+    min-height: 100vh;
+    cursor: url('cursor.svg') 16 35, auto;
+  }
+  .app-shell {
     height: 100vh;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    cursor: url('cursor.svg') 16 35, auto;
   }
   input, textarea, [contenteditable] { cursor: text; }
 
@@ -604,9 +659,50 @@
 
   .toast.visible { opacity: 1; }
 
+  /* --- ABOUT + FAQ (below the quiz) --- */
+  .page-content {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 64px 24px 48px;
+  }
+  .page-content-inner {
+    max-width: 720px; margin: 0 auto;
+    color: var(--text); line-height: 1.65;
+  }
+  .page-content h2 {
+    font-family: 'Newsreader', serif; font-weight: 600;
+    font-size: 28px; color: var(--selected-country);
+    margin: 0 0 16px;
+  }
+  .page-content h2 + p { font-size: 15px; color: var(--text); margin-bottom: 40px; }
+  .page-content h2:not(:first-child) { margin-top: 8px; }
+  .page-content details {
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  .page-content details > summary {
+    cursor: pointer; font-weight: 600; font-size: 15px;
+    list-style: none; position: relative; padding-right: 24px;
+  }
+  .page-content details > summary::-webkit-details-marker { display: none; }
+  .page-content details > summary::after {
+    content: '+'; position: absolute; right: 0; top: 0;
+    font-size: 22px; font-weight: 400; color: var(--text-dim);
+    transition: transform 0.2s;
+  }
+  .page-content details[open] > summary::after { content: '−'; }
+  .page-content details > p {
+    margin-top: 10px; font-size: 14px; color: var(--text-dim);
+  }
+  .page-footer-line {
+    margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border);
+    font-size: 13px; color: var(--text-dim); text-align: center;
+  }
+  .page-footer-line a { color: var(--selected-country); text-decoration: none; }
+
   /* --- MOBILE --- */
   @media (max-width: 768px) {
-    body { height: 100dvh; }
+    .app-shell { height: 100dvh; }
 
     /* HEADER */
     header { padding: 12px 16px; }
@@ -683,6 +779,7 @@
 </div>
 
 <!-- QUIZ VIEW -->
+<div class="app-shell">
 <header id="quizHeader">
   <div class="header-left">
     <h1>World Map Test</h1>
@@ -738,6 +835,38 @@
     </div>
   </div>
 </div>
+</div>
+
+<section class="page-content" aria-labelledby="about-heading">
+  <div class="page-content-inner">
+    <h2 id="about-heading">About this quiz</h2>
+    <p>World Map Test is a free, interactive geography quiz where you identify the world's countries by clicking them on a map. Whether you're studying for a quiz bowl, brushing up on world geography, or just curious how many countries you can name, the test runs entirely in your browser — no sign-up, no app to download. It works on phone, tablet, and desktop.</p>
+
+    <h2>Frequently asked questions</h2>
+    <details>
+      <summary>How many countries are in the World Map Test?</summary>
+      <p>All 195 sovereign states recognized by the United Nations are included, along with major dependent territories grouped under their parent country.</p>
+    </details>
+    <details>
+      <summary>Is World Map Test free?</summary>
+      <p>Yes. The quiz is completely free, runs entirely in your browser, and does not require an account or sign-up.</p>
+    </details>
+    <details>
+      <summary>Does the geography quiz work on mobile?</summary>
+      <p>Yes. The interface adapts to touch screens with pinch-to-zoom on the map and a search-driven country picker. It works on iPhone, Android, iPad, and desktop browsers.</p>
+    </details>
+    <details>
+      <summary>How is my score calculated?</summary>
+      <p>Each correctly identified country counts as one point. Your final score is the percentage of countries you correctly named out of the total. You can finish the quiz at any time, even with countries unassigned.</p>
+    </details>
+    <details>
+      <summary>Where does the country map data come from?</summary>
+      <p>Country boundaries are from Natural Earth, a public-domain dataset, served via the world-atlas TopoJSON package.</p>
+    </details>
+
+    <p class="page-footer-line">© <span id="footerYear">2026</span> World Map Test · <a href="https://worldmaptest.com">worldmaptest.com</a></p>
+  </div>
+</section>
 
 <!-- CONFIRM MODAL -->
 <div class="confirm-overlay" id="confirmOverlay">
