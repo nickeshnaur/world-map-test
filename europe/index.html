@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>Europe Map Quiz — Identify All 44 European Countries</title>
+<meta name="description" content="Free interactive quiz to identify all 44 countries in Europe on a map. Click each country and name it. No sign-up. Works on mobile and desktop.">
+<meta name="keywords" content="europe map quiz, european country quiz, european geography quiz, countries of europe, europe map test">
+<meta name="theme-color" content="#3d6b5e">
+<link rel="canonical" href="https://worldmaptest.com/europe/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://worldmaptest.com/europe/">
+<meta property="og:title" content="Europe Map Quiz — Identify All 44 European Countries">
+<meta property="og:description" content="Free interactive quiz to identify all 44 European countries on a map.">
+<meta property="og:image" content="https://worldmaptest.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Europe Map Quiz — 44 Countries">
+<meta name="twitter:description" content="Free interactive quiz to identify all 44 European countries on a map.">
+<meta name="twitter:image" content="https://worldmaptest.com/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Europe Map Quiz",
+  "url": "https://worldmaptest.com/europe/",
+  "description": "Interactive quiz to identify all 44 European countries on a map.",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"How many countries are in Europe?","acceptedAnswer":{"@type":"Answer","text":"44 sovereign states, from Iceland in the northwest to Cyprus in the southeast. Some lists count 45 or 50 depending on how Russia and the Caucasus states are categorized."}},
+    {"@type":"Question","name":"Is the Europe quiz free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Free, no sign-up, no app to download. Runs entirely in your browser."}},
+    {"@type":"Question","name":"Which is the smallest country in Europe?","acceptedAnswer":{"@type":"Answer","text":"Vatican City, at 0.49 km². The next smallest are Monaco, San Marino, Liechtenstein, and Malta."}},
+    {"@type":"Question","name":"Which is the largest country in Europe?","acceptedAnswer":{"@type":"Answer","text":"Russia by area (the European portion alone is bigger than any other European country). Ukraine is the largest country fully within Europe."}}
+  ]
+}
+</script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6T038REP8E"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6T038REP8E');
+</script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f4f1ec;
+    --surface: #ffffff;
+    --border: #ddd5c8;
+    --text: #2c2825;
+    --text-dim: #8a837a;
+    --accent: #c44830;
+    --selected-country: #3d6b5e;
+    --selected-country-hover: #2d5245;
+  }
+
+  body {
+    font-family: 'Instrument Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  .nav {
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .nav-logo {
+    font-family: 'Newsreader', serif; font-weight: 600;
+    font-size: 18px; color: var(--selected-country);
+    text-decoration: none;
+  }
+  .nav-link {
+    font-size: 13px; color: var(--text-dim); text-decoration: none;
+    font-weight: 600;
+  }
+  .nav-link:hover { color: var(--text); }
+
+  .hero {
+    padding: 80px 24px 60px;
+    max-width: 720px; margin: 0 auto;
+    text-align: center;
+  }
+  .hero h1 {
+    font-family: 'Newsreader', serif; font-weight: 600;
+    font-size: 56px; line-height: 1.05;
+    color: var(--selected-country);
+    letter-spacing: -1px;
+  }
+  .hero p {
+    font-size: 18px; color: var(--text-dim);
+    margin-top: 18px; max-width: 520px;
+    margin-left: auto; margin-right: auto;
+  }
+  .cta {
+    display: inline-block; margin-top: 36px;
+    background: var(--selected-country); color: #fff;
+    padding: 16px 36px; border-radius: 999px;
+    font-weight: 700; font-size: 15px; letter-spacing: 0.3px;
+    text-decoration: none; transition: background 0.15s;
+  }
+  .cta:hover { background: var(--selected-country-hover); }
+
+  .info {
+    max-width: 720px; margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+  .info h2 {
+    font-family: 'Newsreader', serif; font-weight: 600;
+    font-size: 26px; margin-bottom: 14px; margin-top: 40px;
+  }
+  .info p { font-size: 15px; color: var(--text); margin-bottom: 14px; }
+
+  details {
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  details > summary {
+    cursor: pointer; font-weight: 600; font-size: 15px;
+    list-style: none; position: relative; padding-right: 24px;
+  }
+  details > summary::-webkit-details-marker { display: none; }
+  details > summary::after {
+    content: '+'; position: absolute; right: 0; top: -2px;
+    font-size: 22px; font-weight: 400; color: var(--text-dim);
+  }
+  details[open] > summary::after { content: '−'; }
+  details > p { margin-top: 10px; font-size: 14px; color: var(--text-dim); }
+
+  footer {
+    padding: 32px 24px; text-align: center;
+    font-size: 13px; color: var(--text-dim);
+  }
+  footer a { color: var(--selected-country); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 48px 20px 36px; }
+    .hero h1 { font-size: 38px; letter-spacing: -0.5px; }
+    .hero p { font-size: 16px; }
+    .info h2 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="/">World Map Test</a>
+  <a class="nav-link" href="/">All countries →</a>
+</nav>
+
+<section class="hero">
+  <h1>Europe Map Quiz</h1>
+  <p>Identify all 44 European countries on a map. From Iceland to Cyprus, Portugal to Russia — can you name them all?</p>
+  <a class="cta" href="/?region=Europe">Start Europe Quiz</a>
+</section>
+
+<section class="info">
+  <h2>About Europe</h2>
+  <p>Europe is the world's second-smallest continent by area, but home to 44 sovereign states recognized internationally. The continent stretches from Iceland in the northwest to Cyprus in the southeast, and from Portugal in the west to the Ural Mountains in the east. It's the most densely-populated continent and contains both the largest country in the world by area (Russia) and the smallest (Vatican City).</p>
+
+  <h2>Frequently asked questions</h2>
+  <details>
+    <summary>How many countries are in Europe?</summary>
+    <p>44 sovereign states. Some lists count 45 or 50 depending on whether you include Russia, the Caucasus states (Armenia, Azerbaijan, Georgia), or transcontinental nations.</p>
+  </details>
+  <details>
+    <summary>Which is the smallest country in Europe?</summary>
+    <p>Vatican City, at 0.49 km². The other tiny states are Monaco, San Marino, Liechtenstein, and Malta.</p>
+  </details>
+  <details>
+    <summary>Which is the largest country in Europe?</summary>
+    <p>Russia by area — its European portion alone is bigger than any other European country. Ukraine is the largest country located fully within Europe.</p>
+  </details>
+  <details>
+    <summary>Is the quiz free?</summary>
+    <p>Yes. Free, no sign-up, no ads. Runs in your browser on phone, tablet, or desktop.</p>
+  </details>
+</section>
+
+<footer>
+  © 2026 World Map Test · <a href="/">worldmaptest.com</a>
+</footer>
+
+</body>
+</html>

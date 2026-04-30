@@ -1245,9 +1245,25 @@ async function loadMap() {
   countryFeatures = countryFeatures.filter(c => c.name);
   countryFeatures.sort((a, b) => a.name.localeCompare(b.name));
 
+  applyRegionFilter();
+
   document.querySelectorAll('.js-total-count').forEach(el => el.textContent = countryFeatures.length);
   renderCountryList();
   document.getElementById('loadingScreen').classList.add('hidden');
+}
+
+let activeRegion = null;
+function applyRegionFilter() {
+  const params = new URLSearchParams(location.search);
+  const raw = params.get('region');
+  if (!raw) return;
+  const wanted = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+  const mapped = wanted === 'Americas' ? ['North America', 'South America'] : [wanted];
+  if (!mapped.every(r => REGION_MAPPING[r])) return;
+  activeRegion = wanted;
+  countryFeatures = countryFeatures.filter(cf => mapped.includes(COUNTRY_REGIONS[cf.name]));
+  document.querySelector('header h1').textContent = `${wanted} Map Test`;
+  document.title = `${wanted} Map Quiz — Identify Every Country`;
 }
 
 // ===== QUIZ INTERACTION =====
