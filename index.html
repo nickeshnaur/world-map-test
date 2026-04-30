@@ -750,6 +750,22 @@
   .about-card details > p {
     margin-top: 8px; font-size: 13px; color: var(--text-dim); line-height: 1.55;
   }
+  .region-list-heading {
+    font-family: 'Newsreader', serif; font-weight: 600;
+    font-size: 16px; margin: 24px 0 10px; color: var(--text);
+  }
+  .region-list {
+    list-style: none; display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .region-list a {
+    display: inline-block; padding: 6px 12px;
+    border: 1px solid var(--border); border-radius: 999px;
+    font-size: 13px; font-weight: 600;
+    color: var(--selected-country); text-decoration: none;
+    transition: background 0.15s;
+  }
+  .region-list a:hover { background: var(--bg); }
+
   .page-footer-line {
     margin-top: 24px; font-size: 12px;
     color: var(--text-dim); text-align: center;
@@ -943,6 +959,16 @@
       <summary>Where do the borders come from?</summary>
       <p>Natural Earth (public domain), via the world-atlas TopoJSON dataset.</p>
     </details>
+    <h3 class="region-list-heading">By region</h3>
+    <ul class="region-list">
+      <li><a href="/">All 195 countries</a></li>
+      <li><a href="/europe/">Europe</a></li>
+      <li><a href="/africa/">Africa</a></li>
+      <li><a href="/asia/">Asia</a></li>
+      <li><a href="/americas/">Americas</a></li>
+      <li><a href="/oceania/">Oceania</a></li>
+    </ul>
+
     <p class="page-footer-line">© 2026 World Map Test · <a href="https://worldmaptest.com">worldmaptest.com</a></p>
   </div>
 </div>
@@ -1253,17 +1279,58 @@ async function loadMap() {
 }
 
 let activeRegion = null;
-function applyRegionFilter() {
+function detectRegion() {
   const params = new URLSearchParams(location.search);
-  const raw = params.get('region');
-  if (!raw) return;
-  const wanted = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+  const fromQuery = params.get('region');
+  const pathSeg = location.pathname.split('/').filter(Boolean)[0];
+  const pageRegion = (window.PAGE_REGION || '').toString();
+  const raw = fromQuery || pageRegion || (pathSeg && pathSeg !== 'index.html' ? pathSeg : null);
+  if (!raw) return null;
+  return raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+}
+
+function applyRegionFilter() {
+  const wanted = detectRegion();
+  if (!wanted) return;
   const mapped = wanted === 'Americas' ? ['North America', 'South America'] : [wanted];
   if (!mapped.every(r => REGION_MAPPING[r])) return;
   activeRegion = wanted;
-  countryFeatures = countryFeatures.filter(cf => mapped.includes(COUNTRY_REGIONS[cf.name]));
-  document.querySelector('header h1').textContent = `${wanted} Map Test`;
-  document.title = `${wanted} Map Quiz — Identify Every Country`;
+  const allowed = new Set(mapped.flatMap(r => REGION_MAPPING[r]));
+  countryFeatures = countryFeatures.filter(cf => allowed.has(cf.name));
+
+  // Hide map paths outside the region
+  g.selectAll('.country-path').each(function(d) {
+    const rawName = d.properties && d.properties.name;
+    const inRegion = allowed.has(INCLUDE_MAP[rawName])
+      || (TERRITORY_PARENT[rawName] && allowed.has(TERRITORY_PARENT[rawName]));
+    if (!inRegion) d3.select(this).style('display', 'none');
+  });
+
+  // Reframe map to the region's bounding box
+  const visibleFeatures = allFeatures.filter(d => {
+    const rawName = d.properties && d.properties.name;
+    return allowed.has(INCLUDE_MAP[rawName])
+      || (TERRITORY_PARENT[rawName] && allowed.has(TERRITORY_PARENT[rawName]));
+  });
+  if (visibleFeatures.length) {
+    const collection = { type: 'FeatureCollection', features: visibleFeatures };
+    const bounds = path.bounds(collection);
+    const dx = bounds[1][0] - bounds[0][0];
+    const dy = bounds[1][1] - bounds[0][1];
+    const cx = (bounds[0][0] + bounds[1][0]) / 2;
+    const cy = (bounds[0][1] + bounds[1][1]) / 2;
+    const mapWidth = document.querySelector('.map-area').clientWidth;
+    const mapHeight = document.querySelector('.map-area').clientHeight;
+    const scale = Math.min(8, 0.85 / Math.max(dx / mapWidth, dy / mapHeight));
+    const transform = d3.zoomIdentity
+      .translate(mapWidth / 2, mapHeight / 2)
+      .scale(scale)
+      .translate(-cx, -cy);
+    svgEl.call(zoomBehavior.transform, transform);
+  }
+
+  const titleEl = document.querySelector('header h1');
+  if (titleEl) titleEl.textContent = `${wanted} Map Test`;
 }
 
 // ===== QUIZ INTERACTION =====
