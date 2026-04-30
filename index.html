@@ -561,60 +561,65 @@
   @media (max-width: 768px) {
     body { height: 100dvh; }
 
-    header { padding: 10px 14px; }
-    header h1 { font-size: 16px; letter-spacing: -0.2px; }
-    .header-left { gap: 10px; flex-wrap: wrap; min-width: 0; }
-    .progress-text { font-size: 12px; gap: 8px; }
-    .progress-bar-container { width: 70px; }
-    .btn { padding: 9px 14px; font-size: 12px; }
+    /* HEADER — very compact */
+    header { padding: 6px 12px; }
+    header h1 { font-size: 14px; letter-spacing: -0.2px; }
+    .header-left { gap: 8px; min-width: 0; }
+    .progress-text { display: none; }
+    .btn { padding: 7px 12px; font-size: 12px; }
 
+    /* LAYOUT — map dominates, sidebar is content-sized */
     .app-layout { flex-direction: column; }
     .map-area { flex: 1; min-height: 0; }
     .sidebar {
       width: 100%; min-width: 0;
       border-right: none; border-top: 1px solid var(--border);
-      flex: 0 0 32vh; min-height: 0;
+      flex: 0 0 auto;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
     }
+
+    /* HIDDEN ON MOBILE */
     .sidebar-instructions { display: none; }
+    .sidebar-filters { display: none; }
     .country-picker { display: none !important; }
+
+    /* SEARCH — primary input */
+    .sidebar-search { padding: 8px 10px; }
+    .sidebar-search input {
+      padding: 11px 14px; font-size: 16px;
+      border-radius: 8px;
+    }
+
+    /* HINT BANNER */
     .mobile-selection-hint.visible { display: block; }
-    .country-item { padding: 11px 12px; font-size: 14px; }
-    .sidebar-search input { padding: 10px 12px; font-size: 14px; }
-    .sidebar-filter { padding: 11px 4px; font-size: 12px; }
 
+    /* RESULTS LIST — only when there's content; capped height */
+    .country-list { max-height: 32vh; padding: 4px 8px; }
+    .country-list:empty { padding: 0; }
+    .country-item { padding: 12px 12px; font-size: 15px; }
+
+    /* MAP */
     #map-svg { touch-action: none; }
-
-    .map-nav { bottom: 12px; }
+    .map-nav { bottom: 10px; }
     .map-nav-btn { width: 42px; height: 42px; }
     .map-nav-btn svg { width: 20px; height: 20px; }
 
-    .suggestion-btn { width: 40px; height: 40px; bottom: 12px; right: 12px; }
-    .suggestion-panel {
-      width: auto; right: 12px; left: 12px; bottom: 70px;
-      box-sizing: border-box; padding: 16px;
-    }
+    /* SUGGESTION — hidden on mobile to free up space */
+    .suggestion-btn, .suggestion-panel { display: none !important; }
 
-    .country-picker { width: 240px; max-width: calc(100vw - 24px); }
-
-    .results-page { padding: 16px 10px; }
+    /* RESULTS MODAL */
+    .results-page { padding: 12px 8px; }
     .results-header {
-      padding: 14px 16px; flex-direction: column; gap: 10px; align-items: stretch;
+      padding: 12px 14px; flex-direction: column; gap: 8px; align-items: stretch;
     }
-    .results-header-left h2 { font-size: 22px; }
+    .results-header-left h2 { font-size: 20px; }
     .results-actions { flex-wrap: wrap; gap: 6px; }
     .btn-icon { padding: 8px 12px; font-size: 12px; }
-    .results-body { flex-direction: column; padding: 14px 16px; gap: 16px; }
+    .results-body { flex-direction: column; padding: 12px 14px; gap: 14px; }
     .results-sidebar { width: 100%; min-width: 0; }
-    .results-detail-list { max-height: 280px; }
+    .results-detail-list { max-height: 260px; }
 
     .confirm-card { padding: 20px 22px; }
-  }
-
-  @media (max-width: 480px) {
-    header h1 { font-size: 15px; }
-    .progress-bar-container { display: none; }
-    .header-left { gap: 8px; }
-    .sidebar { flex: 0 0 30vh; }
   }
 </style>
 </head>
@@ -650,7 +655,7 @@
       Click a country on the map, then pick a name to assign it.
     </div>
     <div class="mobile-selection-hint" id="mobileSelectionHint">
-      Tap a country name to assign
+      Type to search — tap a result to assign
     </div>
     <div class="sidebar-filters" id="sidebarFilters">
       <button class="sidebar-filter active" data-filter="all">All</button>
@@ -1027,9 +1032,14 @@ let lastClickPos = null; // {x, y} relative to map-area
 function showPicker(mapId) {
   pickerTargetId = mapId;
 
-  // On mobile, skip the popup entirely — sidebar list handles assignment.
+  // On mobile: focus the search input so the keyboard pops up and the user
+  // can type to filter the country list. The sidebar list is the picker.
   if (window.matchMedia('(max-width: 768px)').matches) {
     updateMobileSelectionHint();
+    const searchInput = document.getElementById('searchInput');
+    searchInput.value = '';
+    renderCountryList();
+    searchInput.focus();
     return;
   }
 
@@ -1246,6 +1256,11 @@ function renderCountryList() {
   const search = document.getElementById('searchInput').value.toLowerCase();
   const listEl = document.getElementById('countryList');
   listEl.innerHTML = '';
+
+  // On mobile, only show results once the user has typed something.
+  if (!search && window.matchMedia('(max-width: 768px)').matches) {
+    return;
+  }
 
   countryFeatures.forEach(cf => {
     if (search && !cf.name.toLowerCase().includes(search)) return;
