@@ -321,12 +321,12 @@
 
   /* Map navigation */
   .map-nav {
-    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
-    z-index: 10; display: flex; align-items: center; gap: 10px;
+    position: absolute; bottom: 16px; left: 16px;
+    z-index: 10; display: flex; align-items: center; gap: 8px;
   }
 
   .map-nav-btn {
-    width: 44px; height: 44px; border-radius: 50%;
+    width: 40px; height: 40px; border-radius: 50%;
     background: var(--selected-country); color: white;
     border: none; cursor: pointer; transition: all 0.15s;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
@@ -335,7 +335,7 @@
 
   .map-nav-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
   .map-nav-btn:active { transform: translateY(0); }
-  .map-nav-btn svg { width: 22px; height: 22px; }
+  .map-nav-btn svg { width: 20px; height: 20px; }
 
   .map-controls {
     position: absolute; bottom: 16px; right: 16px;
@@ -824,9 +824,7 @@
 
     /* MAP */
     #map-svg { touch-action: none; }
-    .map-nav { bottom: 10px; }
-    .map-nav-btn { width: 42px; height: 42px; }
-    .map-nav-btn svg { width: 20px; height: 20px; }
+    .map-nav { bottom: 12px; left: 50%; transform: translateX(-50%); }
     .map-controls { display: none; }
 
     /* SUGGESTION — hidden on mobile to free up space */
@@ -1071,7 +1069,7 @@ const INCLUDE_MAP = {
   "Bolivia":"Bolivia","Bosnia and Herz.":"Bosnia and Herzegovina","Botswana":"Botswana",
   "Brazil":"Brazil","Brunei":"Brunei","Bulgaria":"Bulgaria","Burkina Faso":"Burkina Faso",
   "Burundi":"Burundi","Cambodia":"Cambodia","Cameroon":"Cameroon","Canada":"Canada",
-  "Cape Verde":"Cape Verde","Central African Rep.":"Central African Republic","Chad":"Chad",
+  "Cape Verde":"Cape Verde","Cabo Verde":"Cape Verde","Central African Rep.":"Central African Republic","Chad":"Chad",
   "Chile":"Chile","China":"China","Colombia":"Colombia","Comoros":"Comoros",
   "Congo":"Republic of the Congo","Costa Rica":"Costa Rica","Croatia":"Croatia","Cuba":"Cuba",
   "Cyprus":"Cyprus","Czechia":"Czechia","Czech Republic":"Czechia",
@@ -1108,7 +1106,7 @@ const INCLUDE_MAP = {
   "Slovenia":"Slovenia","Solomon Is.":"Solomon Islands","Somalia":"Somalia",
   "South Africa":"South Africa","South Korea":"South Korea","S. Sudan":"South Sudan",
   "Spain":"Spain","Sri Lanka":"Sri Lanka","St. Kitts and Nevis":"Saint Kitts and Nevis",
-  "St. Lucia":"Saint Lucia","St. Vin. and Gren.":"Saint Vincent and the Grenadines",
+  "St. Lucia":"Saint Lucia","Saint Lucia":"Saint Lucia","St. Vin. and Gren.":"Saint Vincent and the Grenadines","Saint Vincent and the Grenadines":"Saint Vincent and the Grenadines",
   "Sudan":"Sudan","Suriname":"Suriname","Sweden":"Sweden","Switzerland":"Switzerland",
   "Syria":"Syria","Taiwan":"Taiwan","Tajikistan":"Tajikistan","Tanzania":"Tanzania",
   "Thailand":"Thailand","Timor-Leste":"Timor-Leste","Togo":"Togo","Tonga":"Tonga",
@@ -1136,7 +1134,7 @@ const COUNTRY_REGIONS = {};
 const REGION_MAPPING = {
   "Africa": ["Algeria","Angola","Benin","Botswana","Burkina Faso","Burundi","Cameroon","Cape Verde","Central African Republic","Chad","Comoros","Republic of the Congo","Democratic Republic of the Congo","Djibouti","Egypt","Equatorial Guinea","Eritrea","Eswatini","Ethiopia","Gabon","Gambia","Ghana","Guinea","Guinea-Bissau","Ivory Coast","Kenya","Lesotho","Liberia","Libya","Madagascar","Malawi","Mali","Mauritania","Mauritius","Morocco","Mozambique","Namibia","Niger","Nigeria","Rwanda","São Tomé and Príncipe","Senegal","Seychelles","Sierra Leone","Somalia","South Africa","South Sudan","Sudan","Tanzania","Togo","Tunisia","Uganda","Zambia","Zimbabwe"],
   "Europe": ["Albania","Andorra","Austria","Belarus","Belgium","Bosnia and Herzegovina","Bulgaria","Croatia","Cyprus","Czechia","Denmark","Estonia","Finland","France","Germany","Greece","Hungary","Iceland","Ireland","Italy","Kosovo","Latvia","Liechtenstein","Lithuania","Luxembourg","Malta","Moldova","Monaco","Montenegro","Netherlands","North Macedonia","Norway","Poland","Portugal","Romania","Russia","San Marino","Serbia","Slovakia","Slovenia","Spain","Sweden","Switzerland","Ukraine","United Kingdom","Vatican City"],
-  "Asia": ["Afghanistan","Armenia","Azerbaijan","Bahrain","Bangladesh","Bhutan","Brunei","Cambodia","China","Georgia","India","Indonesia","Iran","Iraq","Israel","Japan","Jordan","Kazakhstan","Kuwait","Kyrgyzstan","Laos","Lebanon","Malaysia","Maldives","Mongolia","Myanmar","Nepal","North Korea","Oman","Pakistan","Palestine","Philippines","Qatar","Saudi Arabia","Singapore","South Korea","Sri Lanka","Syria","Taiwan","Tajikistan","Thailand","Timor-Leste","Turkey","Turkmenistan","United Arab Emirates","Uzbekistan","Vietnam","Yemen"],
+  "Asia": ["Afghanistan","Armenia","Azerbaijan","Bahrain","Bangladesh","Bhutan","Brunei","Cambodia","China","Georgia","India","Indonesia","Iran","Iraq","Israel","Japan","Jordan","Kazakhstan","Kuwait","Kyrgyzstan","Laos","Lebanon","Malaysia","Maldives","Mongolia","Myanmar","Nepal","North Korea","Oman","Pakistan","Palestine","Philippines","Qatar","Russia","Saudi Arabia","Singapore","South Korea","Sri Lanka","Syria","Taiwan","Tajikistan","Thailand","Timor-Leste","Turkey","Turkmenistan","United Arab Emirates","Uzbekistan","Vietnam","Yemen"],
   "North America": ["Bahamas","Barbados","Belize","Canada","Costa Rica","Cuba","Dominica","Dominican Republic","El Salvador","Grenada","Guatemala","Haiti","Honduras","Jamaica","Mexico","Nicaragua","Panama","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Trinidad and Tobago","United States","Antigua and Barbuda"],
   "South America": ["Argentina","Bolivia","Brazil","Chile","Colombia","Ecuador","Guyana","Paraguay","Peru","Suriname","Uruguay","Venezuela"],
   "Oceania": ["Australia","Fiji","Kiribati","Marshall Islands","Micronesia","Nauru","New Zealand","Palau","Papua New Guinea","Samoa","Solomon Islands","Tonga","Tuvalu","Vanuatu"],
@@ -1335,7 +1333,7 @@ function filterFeatureRings(feature, regionBbox) {
 const REGION_VIEW = {
   'Europe':   { rotate: [-15, 0], bbox: [[-25, 34], [45, 72]] },
   'Africa':   { rotate: [-20, 0], bbox: [[-20, -36], [55, 38]] },
-  'Asia':     { rotate: [-90, 0], bbox: [[25, -12], [150, 78]] },
+  'Asia':     { rotate: [-90, 0], bbox: [[25, -12], [180, 78]] },
   'Americas': { rotate: [90, 0],  bbox: [[-170, -58], [-30, 75]] },
   'Oceania':  { rotate: [-160, 0], bbox: [[110, -50], [180, 0]] },
 };
@@ -1360,11 +1358,20 @@ function applyRegionFilter() {
   const allowed = new Set(mapped.flatMap(r => REGION_MAPPING[r]));
   countryFeatures = countryFeatures.filter(cf => allowed.has(cf.name));
 
-  // Hide every path that isn't a quiz country in this region.
+  // Hide every path that isn't a quiz country in this region. Allow territories of
+  // in-region quiz countries (W. Sahara/Morocco, N. Cyprus/Turkey, Puerto Rico/USA)
+  // through if their centroid falls inside the region bbox — fills geographic gaps
+  // without bringing in distant overseas (Greenland stays hidden on Europe).
+  const regionBbox = REGION_VIEW[wanted] && REGION_VIEW[wanted].bbox;
   g.selectAll('.country-path').each(function(d) {
     const rawName = d.properties && d.properties.name;
-    const inRegion = allowed.has(INCLUDE_MAP[rawName]);
-    if (!inRegion) d3.select(this).style('display', 'none');
+    let visible = allowed.has(INCLUDE_MAP[rawName]);
+    if (!visible && regionBbox && TERRITORY_PARENT[rawName] && allowed.has(TERRITORY_PARENT[rawName])) {
+      const c = d3.geoCentroid(d);
+      visible = c[0] >= regionBbox[0][0] && c[0] <= regionBbox[1][0]
+             && c[1] >= regionBbox[0][1] && c[1] <= regionBbox[1][1];
+    }
+    if (!visible) d3.select(this).style('display', 'none');
   });
 
   const titleEl = document.querySelector('header h1');

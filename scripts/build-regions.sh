@@ -47,9 +47,9 @@ build_region "africa"   "Africa"   "Africa"   "54" \
   "africa map quiz, african country quiz, african geography quiz, countries of africa, africa map test" \
   "Free interactive quiz to identify all 54 countries in Africa on a map. Click each country and name it. No sign-up. Works on mobile and desktop."
 
-build_region "asia"     "Asia"     "Asia"     "48" \
+build_region "asia"     "Asia"     "Asia"     "49" \
   "asia map quiz, asian country quiz, asian geography quiz, countries of asia, asia map test" \
-  "Free interactive quiz to identify all 48 countries in Asia on a map. Click each country and name it. No sign-up. Works on mobile and desktop."
+  "Free interactive quiz to identify all 49 countries in Asia on a map. Click each country and name it. No sign-up. Works on mobile and desktop."
 
 build_region "americas" "Americas" "Americas" "35" \
   "americas map quiz, north america quiz, south america quiz, american geography quiz, countries of the americas" \
