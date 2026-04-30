@@ -187,45 +187,23 @@
     stroke-dasharray: 2,2; vector-effect: non-scaling-stroke;
   }
 
-  /* Map controls */
-  .map-controls {
-    position: absolute; bottom: 16px; right: 16px;
-    display: flex; flex-direction: column; gap: 4px; z-index: 10;
+  /* Map navigation */
+  .map-nav {
+    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+    z-index: 10; display: flex; align-items: center; gap: 10px;
   }
 
-  .map-controls .ctrl-group {
-    display: flex; flex-direction: column; gap: 0;
-  }
-
-  .map-controls button {
-    width: 36px; height: 36px; background: var(--surface);
-    border: 1px solid var(--border); color: var(--text);
-    font-size: 16px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.1s;
-  }
-
-  .map-controls .ctrl-group button:first-child { border-radius: 5px 5px 0 0; }
-  .map-controls .ctrl-group button:last-child { border-radius: 0 0 5px 5px; }
-  .map-controls button:hover { background: var(--bg); }
-
-  .next-nav {
-    position: absolute; bottom: 16px; left: 16px; z-index: 10;
-    display: flex; align-items: center; gap: 0;
-  }
-
-  .next-nav-btn {
-    display: flex; align-items: center; gap: 8px;
-    font-family: 'Instrument Sans', sans-serif; font-size: 13px; font-weight: 600;
-    padding: 10px 16px; border-radius: 8px;
+  .map-nav-btn {
+    width: 44px; height: 44px; border-radius: 50%;
     background: var(--selected-country); color: white;
     border: none; cursor: pointer; transition: all 0.15s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex; align-items: center; justify-content: center;
   }
 
-  .next-nav-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-
-  .next-nav-btn svg { width: 16px; height: 16px; }
+  .map-nav-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .map-nav-btn:active { transform: translateY(0); }
+  .map-nav-btn svg { width: 22px; height: 22px; }
 
   .map-tooltip {
     position: absolute; pointer-events: none; background: var(--surface);
@@ -584,11 +562,11 @@
     .btn { padding: 9px 14px; font-size: 12px; }
 
     .app-layout { flex-direction: column; }
-    .map-area { flex: 0 0 55vh; min-height: 320px; }
+    .map-area { flex: 1; min-height: 0; }
     .sidebar {
       width: 100%; min-width: 0;
       border-right: none; border-top: 1px solid var(--border);
-      flex: 1; min-height: 0;
+      flex: 0 0 32vh; min-height: 0;
     }
     .sidebar-instructions { display: none; }
     .country-item { padding: 11px 12px; font-size: 14px; }
@@ -597,10 +575,11 @@
 
     #map-svg { touch-action: none; }
 
-    .map-controls button { width: 40px; height: 40px; font-size: 18px; }
-    .next-nav-btn { padding: 10px 14px; font-size: 12px; }
+    .map-nav { bottom: 12px; }
+    .map-nav-btn { width: 42px; height: 42px; }
+    .map-nav-btn svg { width: 20px; height: 20px; }
 
-    .suggestion-btn { width: 44px; height: 44px; bottom: 16px; right: 16px; }
+    .suggestion-btn { width: 40px; height: 40px; bottom: 12px; right: 12px; }
     .suggestion-panel {
       width: auto; right: 12px; left: 12px; bottom: 70px;
       box-sizing: border-box; padding: 16px;
@@ -626,7 +605,7 @@
     header h1 { font-size: 15px; }
     .progress-bar-container { display: none; }
     .header-left { gap: 8px; }
-    .map-area { flex: 0 0 52vh; min-height: 280px; }
+    .sidebar { flex: 0 0 30vh; }
   }
 </style>
 </head>
@@ -680,17 +659,13 @@
       </div>
       <div class="picker-list" id="pickerList"></div>
     </div>
-    <div class="next-nav">
-      <button class="next-nav-btn" onclick="flyToNextUnassigned()" title="Navigate to the next unassigned country">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 8 16 12 12 16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        Next Country
+    <div class="map-nav">
+      <button class="map-nav-btn" onclick="flyToPrevUnassigned()" aria-label="Previous unassigned country">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
-    </div>
-    <div class="map-controls">
-      <div class="ctrl-group">
-        <button onclick="zoomBtn(1.4)">+</button>
-        <button onclick="zoomBtn(1/1.4)">−</button>
-      </div>
+      <button class="map-nav-btn" onclick="flyToNextUnassigned()" aria-label="Next unassigned country">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
     </div>
   </div>
 </div>
@@ -1368,16 +1343,19 @@ function clearNextHighlight() {
   currentNextHighlight = null;
 }
 
-function flyToNextUnassigned() {
-  const sorted = getGeoSorted();
+function flyToNextUnassigned() { flyToUnassigned(1); }
+function flyToPrevUnassigned() { flyToUnassigned(-1); }
 
-  // Find next unassigned starting from lastGeoIndex + 1
-  let found = null;
-  let foundIdx = -1;
+function flyToUnassigned(direction) {
+  const sorted = getGeoSorted();
   const len = sorted.length;
 
+  let found = null;
+  let foundIdx = -1;
+  const start = lastGeoIndex < 0 && direction < 0 ? len : lastGeoIndex;
+
   for (let i = 1; i <= len; i++) {
-    const idx = (lastGeoIndex + i) % len;
+    const idx = ((start + i * direction) % len + len) % len;
     if (reverseAssignments[sorted[idx].name] === undefined) {
       found = sorted[idx];
       foundIdx = idx;
@@ -1427,11 +1405,6 @@ function flyToNextUnassigned() {
   const remaining = sorted.filter(cf => reverseAssignments[cf.name] === undefined).length;
   setTimeout(() => showPicker(found.id), 650);
   showToast(`${remaining} countries remaining`);
-}
-
-// ===== ZOOM =====
-function zoomBtn(factor) {
-  svgEl.transition().duration(300).call(zoomBehavior.scaleBy, factor);
 }
 
 // ===== FINISH QUIZ =====
