@@ -2160,6 +2160,15 @@ function toggleSuggestion() {
   document.getElementById('suggestionThanks').style.display = 'none';
 }
 
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('suggestionPanel');
+  const btn = document.getElementById('suggestionBtn');
+  if (panel && panel.classList.contains('visible')
+      && !panel.contains(e.target) && !btn.contains(e.target)) {
+    panel.classList.remove('visible');
+  }
+});
+
 function submitSuggestion() {
   const text = document.getElementById('suggestionText').value.trim();
   if (!text) return;
