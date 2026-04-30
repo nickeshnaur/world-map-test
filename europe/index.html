@@ -1299,22 +1299,26 @@ function applyRegionFilter() {
   const allowed = new Set(mapped.flatMap(r => REGION_MAPPING[r]));
   countryFeatures = countryFeatures.filter(cf => allowed.has(cf.name));
 
-  // Hide map paths outside the region
+  // Hide map paths outside the region (territories included, since they're not quiz countries)
   g.selectAll('.country-path').each(function(d) {
     const rawName = d.properties && d.properties.name;
-    const inRegion = allowed.has(INCLUDE_MAP[rawName])
-      || (TERRITORY_PARENT[rawName] && allowed.has(TERRITORY_PARENT[rawName]));
+    const inRegion = allowed.has(INCLUDE_MAP[rawName]);
     if (!inRegion) d3.select(this).style('display', 'none');
   });
 
-  // Reframe map to the region's bounding box
+  // Reframe map to the region. Skip extremely wide countries (Russia, US with Alaska)
+  // when computing bounds so they don't make the whole map zoom out.
   const visibleFeatures = allFeatures.filter(d => {
     const rawName = d.properties && d.properties.name;
-    return allowed.has(INCLUDE_MAP[rawName])
-      || (TERRITORY_PARENT[rawName] && allowed.has(TERRITORY_PARENT[rawName]));
+    return allowed.has(INCLUDE_MAP[rawName]);
   });
-  if (visibleFeatures.length) {
-    const collection = { type: 'FeatureCollection', features: visibleFeatures };
+  const sane = visibleFeatures.filter(d => {
+    const b = d3.geoBounds(d);
+    return (b[1][0] - b[0][0]) < 50;
+  });
+  const boundsFeatures = sane.length ? sane : visibleFeatures;
+  if (boundsFeatures.length) {
+    const collection = { type: 'FeatureCollection', features: boundsFeatures };
     const bounds = path.bounds(collection);
     const dx = bounds[1][0] - bounds[0][0];
     const dy = bounds[1][1] - bounds[0][1];
