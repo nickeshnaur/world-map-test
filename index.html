@@ -64,10 +64,10 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "How many countries are in the World Map Test quiz?",
+      "name": "How many countries are in the quiz?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "All 195 sovereign states recognized by the United Nations are included, along with major dependent territories grouped under their parent country."
+        "text": "195 — the UN-recognized sovereign states. Big territories like Greenland and Puerto Rico are on the map too; they're grouped under their parent country."
       }
     },
     {
@@ -75,15 +75,15 @@
       "name": "Is World Map Test free?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. The quiz is completely free, runs entirely in your browser, and does not require an account or sign-up."
+        "text": "Yes."
       }
     },
     {
       "@type": "Question",
-      "name": "Does the geography quiz work on mobile?",
+      "name": "Does it work on mobile?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. The interface adapts to touch screens with pinch-to-zoom on the map and a search-driven country picker. It works on iPhone, Android, iPad, and desktop browsers."
+        "text": "Yes. Pinch to zoom, type to search, tap to assign."
       }
     },
     {
@@ -91,15 +91,15 @@
       "name": "How is my score calculated?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Each correctly identified country counts as one point. Your final score is the percentage of countries you correctly named out of the total. You can finish the quiz at any time, even with countries unassigned."
+        "text": "One point per country named correctly. Final score is your percentage out of the total. You can finish anytime, even with countries unassigned."
       }
     },
     {
       "@type": "Question",
-      "name": "Where does the country map data come from?",
+      "name": "Where do the country borders come from?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Country boundaries are from Natural Earth, a public-domain dataset, served via the world-atlas TopoJSON package."
+        "text": "Natural Earth, a public-domain dataset, via the world-atlas TopoJSON package."
       }
     }
   ]
@@ -165,8 +165,11 @@
     letter-spacing: -0.3px;
   }
 
-  .progress-text { font-size: 13px; color: var(--text-dim); display: flex; align-items: center; gap: 10px; }
-  .progress-text span { font-weight: 600; color: var(--text); }
+  .progress-text { font-size: 13px; color: var(--text-dim); display: flex; align-items: center; gap: 12px; }
+  .progress-text .progress-numbers,
+  .mobile-progress .progress-numbers { font-weight: 600; color: var(--text); white-space: nowrap; }
+
+  .mobile-progress { display: none; }
 
   .progress-bar-container {
     width: 120px; height: 5px; background: #e8e4dd;
@@ -313,6 +316,21 @@
   .map-nav-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
   .map-nav-btn:active { transform: translateY(0); }
   .map-nav-btn svg { width: 22px; height: 22px; }
+
+  .map-controls {
+    position: absolute; bottom: 16px; right: 16px;
+    display: flex; flex-direction: column; gap: 0; z-index: 10;
+  }
+  .map-controls button {
+    width: 36px; height: 36px; background: var(--surface);
+    border: 1px solid var(--border); color: var(--text);
+    font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.1s;
+  }
+  .map-controls button:first-child { border-radius: 5px 5px 0 0; }
+  .map-controls button:last-child { border-radius: 0 0 5px 5px; border-top: none; }
+  .map-controls button:hover { background: var(--bg); }
 
   .map-tooltip {
     position: absolute; pointer-events: none; background: var(--surface);
@@ -695,8 +713,8 @@
     margin-top: 10px; font-size: 14px; color: var(--text-dim);
   }
   .page-footer-line {
-    margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border);
-    font-size: 13px; color: var(--text-dim); text-align: center;
+    margin-top: 48px; font-size: 13px;
+    color: var(--text-dim); text-align: center;
   }
   .page-footer-line a { color: var(--selected-country); text-decoration: none; }
 
@@ -726,6 +744,14 @@
     .sidebar-filters { display: none; }
     .country-picker { display: none !important; }
 
+    /* PROGRESS ROW (mobile) */
+    .mobile-progress {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; font-size: 13px; color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-progress .progress-bar-container { flex: 1; }
+
     /* SEARCH — primary input */
     .sidebar-search { padding: 8px 10px; }
     .sidebar-search input {
@@ -746,6 +772,7 @@
     .map-nav { bottom: 10px; }
     .map-nav-btn { width: 42px; height: 42px; }
     .map-nav-btn svg { width: 20px; height: 20px; }
+    .map-controls { display: none; }
 
     /* SUGGESTION — hidden on mobile to free up space */
     .suggestion-btn, .suggestion-panel { display: none !important; }
@@ -784,9 +811,9 @@
   <div class="header-left">
     <h1>World Map Test</h1>
     <div class="progress-text">
-      <span id="matchCount">0</span> / <span id="totalCount">0</span> (<span id="matchPct">0%</span>)
+      <span class="progress-numbers"><span class="js-match-count">0</span> / <span class="js-total-count">0</span> · <span class="js-match-pct">0%</span></span>
       <div class="progress-bar-container">
-        <div class="progress-bar-fill" id="progressBar"></div>
+        <div class="progress-bar-fill js-progress-bar"></div>
       </div>
     </div>
   </div>
@@ -797,6 +824,12 @@
 
 <div class="app-layout" id="quizLayout">
   <div class="sidebar">
+    <div class="mobile-progress">
+      <span class="progress-numbers"><span class="js-match-count">0</span> / <span class="js-total-count">0</span> · <span class="js-match-pct">0%</span></span>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill js-progress-bar"></div>
+      </div>
+    </div>
     <div class="sidebar-search">
       <input type="text" id="searchInput" placeholder="Search countries..." />
     </div>
@@ -833,38 +866,43 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
     </div>
+    <div class="map-controls">
+      <button onclick="zoomBtn(1.4)" aria-label="Zoom in">+</button>
+      <button onclick="zoomBtn(1/1.4)" aria-label="Zoom out">−</button>
+    </div>
   </div>
 </div>
 </div>
 
 <section class="page-content" aria-labelledby="about-heading">
   <div class="page-content-inner">
-    <h2 id="about-heading">About this quiz</h2>
-    <p>World Map Test is a free, interactive geography quiz where you identify the world's countries by clicking them on a map. Whether you're studying for a quiz bowl, brushing up on world geography, or just curious how many countries you can name, the test runs entirely in your browser — no sign-up, no app to download. It works on phone, tablet, and desktop.</p>
-
-    <h2>Frequently asked questions</h2>
+    <h2 id="about-heading">About &amp; FAQ</h2>
     <details>
-      <summary>How many countries are in the World Map Test?</summary>
-      <p>All 195 sovereign states recognized by the United Nations are included, along with major dependent territories grouped under their parent country.</p>
+      <summary>What is this?</summary>
+      <p>A geography quiz. Click a country on the map, pick its name. 195 sovereign states plus a handful of major territories. Free, no sign-up, no app.</p>
     </details>
     <details>
-      <summary>Is World Map Test free?</summary>
-      <p>Yes. The quiz is completely free, runs entirely in your browser, and does not require an account or sign-up.</p>
+      <summary>How many countries are in the quiz?</summary>
+      <p>195 — the UN-recognized sovereign states. Big territories like Greenland and Puerto Rico are on the map too; they're grouped under their parent country.</p>
     </details>
     <details>
-      <summary>Does the geography quiz work on mobile?</summary>
-      <p>Yes. The interface adapts to touch screens with pinch-to-zoom on the map and a search-driven country picker. It works on iPhone, Android, iPad, and desktop browsers.</p>
+      <summary>Is it free?</summary>
+      <p>Yep.</p>
+    </details>
+    <details>
+      <summary>Does it work on my phone?</summary>
+      <p>Yes. Pinch to zoom, type to search, tap to assign.</p>
     </details>
     <details>
       <summary>How is my score calculated?</summary>
-      <p>Each correctly identified country counts as one point. Your final score is the percentage of countries you correctly named out of the total. You can finish the quiz at any time, even with countries unassigned.</p>
+      <p>One point per country named correctly. Final score is your percentage out of the total. You can finish anytime, even with countries unassigned.</p>
     </details>
     <details>
-      <summary>Where does the country map data come from?</summary>
-      <p>Country boundaries are from Natural Earth, a public-domain dataset, served via the world-atlas TopoJSON package.</p>
+      <summary>Where do the borders come from?</summary>
+      <p>Natural Earth (public domain), via the world-atlas TopoJSON dataset.</p>
     </details>
 
-    <p class="page-footer-line">© <span id="footerYear">2026</span> World Map Test · <a href="https://worldmaptest.com">worldmaptest.com</a></p>
+    <p class="page-footer-line">© 2026 World Map Test · <a href="https://worldmaptest.com">worldmaptest.com</a></p>
   </div>
 </section>
 
@@ -1175,7 +1213,7 @@ async function loadMap() {
   countryFeatures = countryFeatures.filter(c => c.name);
   countryFeatures.sort((a, b) => a.name.localeCompare(b.name));
 
-  document.getElementById('totalCount').textContent = countryFeatures.length;
+  document.querySelectorAll('.js-total-count').forEach(el => el.textContent = countryFeatures.length);
   renderCountryList();
   document.getElementById('loadingScreen').classList.add('hidden');
 }
@@ -1408,9 +1446,9 @@ function updateCount() {
   const matched = Object.keys(assignments).length;
   const total = countryFeatures.length;
   const pct = total > 0 ? Math.round(matched / total * 100) : 0;
-  document.getElementById('matchCount').textContent = matched;
-  document.getElementById('matchPct').textContent = pct + '%';
-  document.getElementById('progressBar').style.width = pct + '%';
+  document.querySelectorAll('.js-match-count').forEach(el => el.textContent = matched);
+  document.querySelectorAll('.js-match-pct').forEach(el => el.textContent = pct + '%');
+  document.querySelectorAll('.js-progress-bar').forEach(el => el.style.width = pct + '%');
 
   // Update sidebar filter counts
   updateSidebarFilterCounts();
@@ -1572,6 +1610,10 @@ function clearNextHighlight() {
 
 function flyToNextUnassigned() { flyToUnassigned(1); }
 function flyToPrevUnassigned() { flyToUnassigned(-1); }
+
+function zoomBtn(factor) {
+  svgEl.transition().duration(300).call(zoomBehavior.scaleBy, factor);
+}
 
 function flyToUnassigned(direction) {
   const sorted = getGeoSorted();
