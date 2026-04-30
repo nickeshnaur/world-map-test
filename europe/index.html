@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<title>Europe Map Quiz — Identify All 44 European Countries</title>
-<meta name="description" content="Free interactive quiz to identify all 44 countries in Europe on a map. Click each country and name it. No sign-up. Works on mobile and desktop.">
+<title>Europe Map Quiz — Identify All 46 European Countries</title>
+<meta name="description" content="Free interactive quiz to identify all 46 countries in Europe on a map. Click each country and name it. No sign-up. Works on mobile and desktop.">
 <meta name="keywords" content="europe map quiz, european country quiz, european geography quiz, countries of europe, europe map test">
 <meta name="author" content="Nick Eshnaur">
 <meta name="robots" content="index, follow">
@@ -19,8 +19,8 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://worldmaptest.com/europe/">
-<meta property="og:title" content="Europe Map Quiz — Identify All 44 European Countries">
-<meta property="og:description" content="Free interactive quiz to identify all 44 European countries on a map.">
+<meta property="og:title" content="Europe Map Quiz — Identify All 46 European Countries">
+<meta property="og:description" content="Free interactive quiz to identify all 46 European countries on a map.">
 <meta property="og:image" content="https://worldmaptest.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -29,8 +29,8 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://worldmaptest.com/europe/">
-<meta name="twitter:title" content="Europe Map Quiz — 44 Countries">
-<meta name="twitter:description" content="Free interactive quiz to identify all 44 European countries on a map.">
+<meta name="twitter:title" content="Europe Map Quiz — 46 Countries">
+<meta name="twitter:description" content="Free interactive quiz to identify all 46 European countries on a map.">
 <meta name="twitter:image" content="https://worldmaptest.com/og-image.png">
 
 <!-- Structured data -->
@@ -1173,9 +1173,27 @@ async function loadMap() {
   const width = document.querySelector('.map-area').clientWidth;
   const height = document.querySelector('.map-area').clientHeight;
 
-  projection = d3.geoNaturalEarth1()
-    .fitSize([width - 20, height - 20], countries)
-    .translate([width / 2, height / 2]);
+  // Detect region BEFORE building the projection so we configure rotation/fit once.
+  const wantedRegion = detectRegion();
+  const view = wantedRegion && REGION_VIEW[wantedRegion];
+
+  let fitTarget = countries;
+  if (view) {
+    fitTarget = { type: 'Feature', geometry: { type: 'Polygon', coordinates: [[
+      [view.bbox[0][0], view.bbox[0][1]],
+      [view.bbox[1][0], view.bbox[0][1]],
+      [view.bbox[1][0], view.bbox[1][1]],
+      [view.bbox[0][0], view.bbox[1][1]],
+      [view.bbox[0][0], view.bbox[0][1]],
+    ]] } };
+  }
+
+  projection = d3.geoNaturalEarth1();
+  if (view) projection.rotate(view.rotate);
+  projection.fitSize([width - 20, height - 20], fitTarget);
+  // Clip the projection output to the visible SVG rect so any country
+  // wrapping across the antimeridian (Russia) is cut at the screen edge.
+  projection.clipExtent([[0, 0], [width, height]]);
 
   path = d3.geoPath().projection(projection);
 
@@ -1307,34 +1325,12 @@ function applyRegionFilter() {
   const allowed = new Set(mapped.flatMap(r => REGION_MAPPING[r]));
   countryFeatures = countryFeatures.filter(cf => allowed.has(cf.name));
 
-  // Hide every path that isn't a quiz country in this region (kills territories + non-quiz shapes)
+  // Hide every path that isn't a quiz country in this region.
   g.selectAll('.country-path').each(function(d) {
     const rawName = d.properties && d.properties.name;
     const inRegion = allowed.has(INCLUDE_MAP[rawName]);
     if (!inRegion) d3.select(this).style('display', 'none');
   });
-
-  // Rotate the projection so the region sits at the centre — keeps Russia/US in one piece
-  // off the edges instead of wrapping across the antimeridian. Refit to a hardcoded bbox
-  // for the region so distant parts of huge countries clip naturally.
-  const view = REGION_VIEW[wanted];
-  if (view) {
-    const mapWidth = document.querySelector('.map-area').clientWidth;
-    const mapHeight = document.querySelector('.map-area').clientHeight;
-    projection.rotate(view.rotate);
-    const bboxFeature = {
-      type: 'Feature',
-      geometry: { type: 'Polygon', coordinates: [[
-        [view.bbox[0][0], view.bbox[0][1]],
-        [view.bbox[1][0], view.bbox[0][1]],
-        [view.bbox[1][0], view.bbox[1][1]],
-        [view.bbox[0][0], view.bbox[1][1]],
-        [view.bbox[0][0], view.bbox[0][1]],
-      ]] }
-    };
-    projection.fitSize([mapWidth - 20, mapHeight - 20], bboxFeature);
-    g.selectAll('path').attr('d', path);
-  }
 
   const titleEl = document.querySelector('header h1');
   if (titleEl) titleEl.textContent = `${wanted} Map Test`;

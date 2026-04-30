@@ -1172,9 +1172,27 @@ async function loadMap() {
   const width = document.querySelector('.map-area').clientWidth;
   const height = document.querySelector('.map-area').clientHeight;
 
-  projection = d3.geoNaturalEarth1()
-    .fitSize([width - 20, height - 20], countries)
-    .translate([width / 2, height / 2]);
+  // Detect region BEFORE building the projection so we configure rotation/fit once.
+  const wantedRegion = detectRegion();
+  const view = wantedRegion && REGION_VIEW[wantedRegion];
+
+  let fitTarget = countries;
+  if (view) {
+    fitTarget = { type: 'Feature', geometry: { type: 'Polygon', coordinates: [[
+      [view.bbox[0][0], view.bbox[0][1]],
+      [view.bbox[1][0], view.bbox[0][1]],
+      [view.bbox[1][0], view.bbox[1][1]],
+      [view.bbox[0][0], view.bbox[1][1]],
+      [view.bbox[0][0], view.bbox[0][1]],
+    ]] } };
+  }
+
+  projection = d3.geoNaturalEarth1();
+  if (view) projection.rotate(view.rotate);
+  projection.fitSize([width - 20, height - 20], fitTarget);
+  // Clip the projection output to the visible SVG rect so any country
+  // wrapping across the antimeridian (Russia) is cut at the screen edge.
+  projection.clipExtent([[0, 0], [width, height]]);
 
   path = d3.geoPath().projection(projection);
 
@@ -1306,34 +1324,12 @@ function applyRegionFilter() {
   const allowed = new Set(mapped.flatMap(r => REGION_MAPPING[r]));
   countryFeatures = countryFeatures.filter(cf => allowed.has(cf.name));
 
-  // Hide every path that isn't a quiz country in this region (kills territories + non-quiz shapes)
+  // Hide every path that isn't a quiz country in this region.
   g.selectAll('.country-path').each(function(d) {
     const rawName = d.properties && d.properties.name;
     const inRegion = allowed.has(INCLUDE_MAP[rawName]);
     if (!inRegion) d3.select(this).style('display', 'none');
   });
-
-  // Rotate the projection so the region sits at the centre — keeps Russia/US in one piece
-  // off the edges instead of wrapping across the antimeridian. Refit to a hardcoded bbox
-  // for the region so distant parts of huge countries clip naturally.
-  const view = REGION_VIEW[wanted];
-  if (view) {
-    const mapWidth = document.querySelector('.map-area').clientWidth;
-    const mapHeight = document.querySelector('.map-area').clientHeight;
-    projection.rotate(view.rotate);
-    const bboxFeature = {
-      type: 'Feature',
-      geometry: { type: 'Polygon', coordinates: [[
-        [view.bbox[0][0], view.bbox[0][1]],
-        [view.bbox[1][0], view.bbox[0][1]],
-        [view.bbox[1][0], view.bbox[1][1]],
-        [view.bbox[0][0], view.bbox[1][1]],
-        [view.bbox[0][0], view.bbox[0][1]],
-      ]] }
-    };
-    projection.fitSize([mapWidth - 20, mapHeight - 20], bboxFeature);
-    g.selectAll('path').attr('d', path);
-  }
 
   const titleEl = document.querySelector('header h1');
   if (titleEl) titleEl.textContent = `${wanted} Map Test`;
