@@ -135,7 +135,8 @@
     font-family: 'Instrument Sans', sans-serif;
     background: var(--bg);
     color: var(--text);
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
     cursor: url('cursor.svg') 16 35, auto;
   }
   .app-shell {
@@ -168,6 +169,13 @@
   .progress-text { font-size: 13px; color: var(--text-dim); display: flex; align-items: center; gap: 12px; }
   .progress-text .progress-numbers,
   .mobile-progress .progress-numbers { font-weight: 600; color: var(--text); white-space: nowrap; }
+
+  .progress-pill {
+    background: var(--selected-country); color: white;
+    padding: 3px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+    line-height: 1.4;
+  }
 
   .mobile-progress { display: none; }
 
@@ -677,43 +685,62 @@
 
   .toast.visible { opacity: 1; }
 
-  /* --- ABOUT + FAQ (below the quiz) --- */
-  .page-content {
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    padding: 64px 24px 48px;
+  /* --- ABOUT/FAQ MODAL --- */
+  .btn-text {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    background: transparent; border: none;
+    color: var(--text-dim); cursor: pointer;
+    padding: 8px 12px; border-radius: 6px;
+    transition: color 0.15s;
   }
-  .page-content-inner {
-    max-width: 720px; margin: 0 auto;
-    color: var(--text); line-height: 1.65;
+  .btn-text:hover { color: var(--text); }
+
+  .about-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(44,40,37,0.5); backdrop-filter: blur(3px);
+    z-index: 150; justify-content: center; align-items: center;
+    padding: 24px;
   }
-  .page-content h2 {
+  .about-overlay.visible { display: flex; }
+  .about-card {
+    background: var(--surface); border-radius: 12px;
+    width: 100%; max-width: 560px; max-height: 80vh;
+    overflow-y: auto; padding: 32px 32px 28px; position: relative;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+    animation: fadeUp 0.2s ease;
+  }
+  .about-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 32px; height: 32px; border-radius: 6px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-dim); font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .about-close:hover { background: var(--bg); color: var(--text); }
+  .about-card h2 {
     font-family: 'Newsreader', serif; font-weight: 600;
-    font-size: 28px; color: var(--selected-country);
+    font-size: 24px; color: var(--selected-country);
     margin: 0 0 16px;
   }
-  .page-content h2 + p { font-size: 15px; color: var(--text); margin-bottom: 40px; }
-  .page-content h2:not(:first-child) { margin-top: 8px; }
-  .page-content details {
-    border-bottom: 1px solid var(--border);
-    padding: 14px 0;
+  .about-card details {
+    border-bottom: 1px solid var(--border); padding: 12px 0;
   }
-  .page-content details > summary {
-    cursor: pointer; font-weight: 600; font-size: 15px;
+  .about-card details > summary {
+    cursor: pointer; font-weight: 600; font-size: 14px;
     list-style: none; position: relative; padding-right: 24px;
   }
-  .page-content details > summary::-webkit-details-marker { display: none; }
-  .page-content details > summary::after {
-    content: '+'; position: absolute; right: 0; top: 0;
-    font-size: 22px; font-weight: 400; color: var(--text-dim);
-    transition: transform 0.2s;
+  .about-card details > summary::-webkit-details-marker { display: none; }
+  .about-card details > summary::after {
+    content: '+'; position: absolute; right: 0; top: -2px;
+    font-size: 20px; font-weight: 400; color: var(--text-dim);
   }
-  .page-content details[open] > summary::after { content: '−'; }
-  .page-content details > p {
-    margin-top: 10px; font-size: 14px; color: var(--text-dim);
+  .about-card details[open] > summary::after { content: '−'; }
+  .about-card details > p {
+    margin-top: 8px; font-size: 13px; color: var(--text-dim); line-height: 1.55;
   }
   .page-footer-line {
-    margin-top: 48px; font-size: 13px;
+    margin-top: 24px; font-size: 12px;
     color: var(--text-dim); text-align: center;
   }
   .page-footer-line a { color: var(--selected-country); text-decoration: none; }
@@ -811,13 +838,15 @@
   <div class="header-left">
     <h1>World Map Test</h1>
     <div class="progress-text">
-      <span class="progress-numbers"><span class="js-match-count">0</span> / <span class="js-total-count">0</span> · <span class="js-match-pct">0%</span></span>
+      <span class="progress-numbers"><span class="js-match-count">0</span> / <span class="js-total-count">0</span></span>
       <div class="progress-bar-container">
         <div class="progress-bar-fill js-progress-bar"></div>
       </div>
+      <span class="progress-pill"><span class="js-match-pct">0%</span></span>
     </div>
   </div>
   <div class="header-right">
+    <button class="btn-text" onclick="toggleAbout()" aria-label="About and FAQ">About</button>
     <button class="btn btn-finish" onclick="finishQuiz()">Finish Quiz</button>
   </div>
 </header>
@@ -825,10 +854,11 @@
 <div class="app-layout" id="quizLayout">
   <div class="sidebar">
     <div class="mobile-progress">
-      <span class="progress-numbers"><span class="js-match-count">0</span> / <span class="js-total-count">0</span> · <span class="js-match-pct">0%</span></span>
+      <span class="progress-numbers"><span class="js-match-count">0</span> / <span class="js-total-count">0</span></span>
       <div class="progress-bar-container">
         <div class="progress-bar-fill js-progress-bar"></div>
       </div>
+      <span class="progress-pill"><span class="js-match-pct">0%</span></span>
     </div>
     <div class="sidebar-search">
       <input type="text" id="searchInput" placeholder="Search countries..." />
@@ -874,8 +904,9 @@
 </div>
 </div>
 
-<section class="page-content" aria-labelledby="about-heading">
-  <div class="page-content-inner">
+<div class="about-overlay" id="aboutOverlay" onclick="if(event.target===this)toggleAbout()">
+  <div class="about-card" role="dialog" aria-labelledby="about-heading">
+    <button class="about-close" onclick="toggleAbout()" aria-label="Close">✕</button>
     <h2 id="about-heading">About &amp; FAQ</h2>
     <details>
       <summary>What is this?</summary>
@@ -901,10 +932,9 @@
       <summary>Where do the borders come from?</summary>
       <p>Natural Earth (public domain), via the world-atlas TopoJSON dataset.</p>
     </details>
-
     <p class="page-footer-line">© 2026 World Map Test · <a href="https://worldmaptest.com">worldmaptest.com</a></p>
   </div>
-</section>
+</div>
 
 <!-- CONFIRM MODAL -->
 <div class="confirm-overlay" id="confirmOverlay">
@@ -1613,6 +1643,10 @@ function flyToPrevUnassigned() { flyToUnassigned(-1); }
 
 function zoomBtn(factor) {
   svgEl.transition().duration(300).call(zoomBehavior.scaleBy, factor);
+}
+
+function toggleAbout() {
+  document.getElementById('aboutOverlay').classList.toggle('visible');
 }
 
 function flyToUnassigned(direction) {
