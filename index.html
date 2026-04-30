@@ -1167,6 +1167,22 @@ async function loadMap() {
 
   const countries = topojson.feature(worldData, worldData.objects.countries);
 
+  // Tuvalu is missing from countries-50m. Inject a small synthetic polygon
+  // away from the antimeridian (d3's spherical clipper produces giant
+  // wraparound polygons for shapes near ±180°). 10m has Tuvalu but ships
+  // malformed rings that break the same clipper across multiple countries.
+  if (!countries.features.some(f => f.properties && f.properties.name === 'Tuvalu')) {
+    const cx = 178.0, cy = -8.5, r = 0.4;
+    countries.features.push({
+      type: 'Feature',
+      id: 'TUV',
+      properties: { name: 'Tuvalu' },
+      geometry: { type: 'Polygon', coordinates: [[
+        [cx - r, cy - r], [cx - r, cy + r], [cx + r, cy + r], [cx + r, cy - r], [cx - r, cy - r],
+      ]] },
+    });
+  }
+
   const width = document.querySelector('.map-area').clientWidth;
   const height = document.querySelector('.map-area').clientHeight;
 
@@ -1195,8 +1211,6 @@ async function loadMap() {
   projection = d3.geoNaturalEarth1();
   if (view) projection.rotate(view.rotate);
   projection.fitSize([width - 20, height - 20], fitTarget);
-  // Clip the projection output to the visible SVG rect so any country
-  // wrapping across the antimeridian (Russia) is cut at the screen edge.
   projection.clipExtent([[0, 0], [width, height]]);
 
   path = d3.geoPath().projection(projection);
