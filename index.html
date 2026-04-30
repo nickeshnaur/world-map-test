@@ -1697,9 +1697,7 @@ function flyToUnassigned(direction) {
     return d.id === found.id;
   });
 
-  const remaining = sorted.filter(cf => reverseAssignments[cf.name] === undefined).length;
   setTimeout(() => showPicker(found.id), 650);
-  showToast(`${remaining} countries remaining`);
 }
 
 // ===== FINISH QUIZ =====
