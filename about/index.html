@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>About World Map Test — How the Free Geography Quiz Works</title>
+<meta name="description" content="Learn how World Map Test works: an interactive, ad-free geography quiz covering all 195 countries. Includes the full country list by region, study tips, and FAQ.">
+<meta name="keywords" content="world map test, world geography quiz, list of countries, countries by region, how to learn world map, geography study tips">
+<meta name="author" content="Nick Eshnaur">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#3d6b5e">
+<link rel="canonical" href="https://worldmaptest.com/about/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://worldmaptest.com/about/">
+<meta property="og:title" content="About World Map Test — How the Free Geography Quiz Works">
+<meta property="og:description" content="Learn how World Map Test works: an interactive, ad-free geography quiz covering all 195 countries.">
+<meta property="og:image" content="https://worldmaptest.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="World Map Test">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://worldmaptest.com/about/">
+<meta name="twitter:title" content="About World Map Test">
+<meta name="twitter:description" content="How the free, ad-free interactive world geography quiz works — and the full list of countries by region.">
+<meta name="twitter:image" content="https://worldmaptest.com/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "World Map Test", "item": "https://worldmaptest.com/"},
+    {"@type": "ListItem", "position": 2, "name": "About", "item": "https://worldmaptest.com/about/"}
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "How many countries are in World Map Test?", "acceptedAnswer": {"@type": "Answer", "text": "195 — the UN-recognized sovereign states. Major territories like Greenland, Puerto Rico, and Hong Kong appear on the map but are grouped under their parent country."}},
+    {"@type": "Question", "name": "Is World Map Test free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. No sign-up, no ads, no paywall, no app to download. Open the site and play."}},
+    {"@type": "Question", "name": "Does World Map Test work on mobile?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Pinch to zoom, type to search, tap to assign. The interface adapts for small screens."}},
+    {"@type": "Question", "name": "How is my score calculated?", "acceptedAnswer": {"@type": "Answer", "text": "One point per country named correctly. Your final score is the percentage out of the total. You can finish anytime, even with countries unassigned — those count as skipped."}},
+    {"@type": "Question", "name": "Where do the country borders come from?", "acceptedAnswer": {"@type": "Answer", "text": "Natural Earth, a public-domain dataset, delivered via the world-atlas TopoJSON package."}},
+    {"@type": "Question", "name": "Can I quiz myself on just one continent?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. There are dedicated region quizzes for Europe (46), Africa (54), Asia (49), the Americas (35), and Oceania (14)."}},
+    {"@type": "Question", "name": "Is Russia in Europe or Asia?", "acceptedAnswer": {"@type": "Answer", "text": "On World Map Test, Russia is grouped under Asia. It's geographically split, but the majority of its landmass sits east of the Urals."}},
+    {"@type": "Question", "name": "Does the quiz include disputed territories?", "acceptedAnswer": {"@type": "Answer", "text": "The quiz tests UN-recognized sovereign states. Contested regions appear visually on the map but aren't part of the 195 you're asked to identify."}}
+  ]
+}
+</script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f4f1ec;
+    --surface: #ffffff;
+    --border: #ddd5c8;
+    --text: #2c2825;
+    --text-dim: #8a837a;
+    --accent: #c44830;
+    --accent-hover: #a83a26;
+    --selected-country: #3d6b5e;
+  }
+
+  body {
+    font-family: 'Instrument Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  header.site-header {
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  header.site-header h1.brand {
+    font-family: 'Newsreader', serif;
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+  }
+  header.site-header h1.brand a { color: var(--text); text-decoration: none; }
+
+  .play-btn {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    padding: 8px 18px; border-radius: 6px;
+    background: var(--accent); color: white;
+    text-decoration: none; transition: background 0.15s;
+  }
+  .play-btn:hover { background: var(--accent-hover); }
+
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  nav.breadcrumbs {
+    font-size: 13px; color: var(--text-dim); margin-bottom: 16px;
+  }
+  nav.breadcrumbs a { color: var(--selected-country); text-decoration: none; }
+  nav.breadcrumbs a:hover { text-decoration: underline; }
+
+  h1.page-title {
+    font-family: 'Newsreader', serif;
+    font-weight: 600;
+    font-size: 38px;
+    letter-spacing: -0.5px;
+    color: var(--selected-country);
+    margin-bottom: 8px;
+  }
+
+  .lede {
+    font-size: 17px; color: var(--text-dim); margin-bottom: 36px;
+  }
+
+  h2 {
+    font-family: 'Newsreader', serif;
+    font-weight: 600;
+    font-size: 24px;
+    margin: 40px 0 12px;
+    color: var(--text);
+  }
+
+  h3 {
+    font-family: 'Instrument Sans', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 20px 0 8px;
+  }
+
+  p { margin-bottom: 14px; font-size: 15px; }
+
+  ul, ol { margin: 8px 0 16px 24px; }
+  li { margin-bottom: 6px; font-size: 15px; }
+
+  a { color: var(--selected-country); }
+
+  .region-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 20px 0 16px;
+    list-style: none;
+    padding: 0;
+  }
+  .region-cards li { margin: 0; }
+  .region-cards a {
+    display: block;
+    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .region-cards a:hover {
+    border-color: var(--selected-country);
+    transform: translateY(-1px);
+  }
+  .region-cards .name {
+    font-family: 'Newsreader', serif;
+    font-size: 18px; font-weight: 600;
+    color: var(--selected-country);
+    margin-bottom: 2px;
+  }
+  .region-cards .meta {
+    font-size: 13px; color: var(--text-dim);
+  }
+
+  .country-grid {
+    columns: 2;
+    column-gap: 24px;
+    font-size: 14px;
+    margin: 8px 0 20px;
+  }
+  .country-grid li { break-inside: avoid; margin-bottom: 4px; }
+
+  details.faq-item {
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  details.faq-item summary {
+    cursor: pointer; font-weight: 600; font-size: 15px;
+    list-style: none; position: relative; padding-right: 24px;
+  }
+  details.faq-item summary::-webkit-details-marker { display: none; }
+  details.faq-item summary::after {
+    content: '+'; position: absolute; right: 0; top: -2px;
+    font-size: 20px; font-weight: 400; color: var(--text-dim);
+  }
+  details.faq-item[open] summary::after { content: '−'; }
+  details.faq-item p { margin-top: 10px; color: var(--text-dim); font-size: 14px; }
+
+  footer.site-footer {
+    border-top: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    background: var(--surface);
+  }
+  footer.site-footer a { color: var(--selected-country); text-decoration: none; margin: 0 8px; }
+
+  @media (max-width: 600px) {
+    main { padding: 32px 18px 60px; }
+    h1.page-title { font-size: 30px; }
+    .country-grid { columns: 1; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1 class="brand"><a href="/">World Map Test</a></h1>
+  <a class="play-btn" href="/">Play the quiz</a>
+</header>
+
+<main>
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a> &rsaquo; About
+  </nav>
+
+  <h1 class="page-title">About World Map Test</h1>
+  <p class="lede">A free, ad-free, sign-up-free interactive geography quiz that asks you to identify all 195 countries on a world map.</p>
+
+  <h2>What it is</h2>
+  <p>World Map Test is a single-page interactive geography quiz. You're shown a clean, zoomable world map with every country highlighted but unlabeled. Click any country, then pick its name from a searchable list — or start typing in the sidebar and the map will fly to your match. The goal is to identify all 195 UN-recognized sovereign states.</p>
+  <p>The site is built around three principles: no friction, no clutter, no nonsense. There are no ads, no pop-ups, no email walls, no in-app purchases, no "premium tier," and no tracking beyond basic anonymous analytics. Open the page and play.</p>
+
+  <h2>How the quiz works</h2>
+  <ol>
+    <li><strong>Pick a country on the map.</strong> Click anywhere on a country's borders. The selected country turns green.</li>
+    <li><strong>Identify it.</strong> A name picker appears next to the country. Type the first few letters or scroll the list to find the right name.</li>
+    <li><strong>Or work from the sidebar.</strong> Type a country name in the search box on the left. The map will fly to it and highlight it. Click confirm to assign.</li>
+    <li><strong>Track your progress.</strong> The progress bar at the top shows how many countries you've correctly assigned out of the total.</li>
+    <li><strong>Finish anytime.</strong> Click "Finish Quiz" when you're done. You'll see your score, a per-region breakdown, and a list of which countries you got right, wrong, or skipped.</li>
+  </ol>
+  <p>You can also use the &lsaquo; and &rsaquo; arrows on the map to jump to the next or previous unassigned country. On mobile, pinch to zoom and tap to select.</p>
+
+  <h2>Try a region quiz</h2>
+  <p>If 195 countries feels like a lot, start with a single continent. Each region quiz uses the same interface, just narrowed to that part of the world.</p>
+  <ul class="region-cards">
+    <li><a href="/europe/"><div class="name">Europe</div><div class="meta">46 countries</div></a></li>
+    <li><a href="/africa/"><div class="name">Africa</div><div class="meta">54 countries</div></a></li>
+    <li><a href="/asia/"><div class="name">Asia</div><div class="meta">49 countries (incl. Russia)</div></a></li>
+    <li><a href="/americas/"><div class="name">Americas</div><div class="meta">35 countries</div></a></li>
+    <li><a href="/oceania/"><div class="name">Oceania</div><div class="meta">14 countries</div></a></li>
+  </ul>
+
+  <h2>Countries included</h2>
+  <p>The quiz tests the 195 sovereign states recognized by the United Nations: 193 UN member states plus Vatican City and Palestine, both of which hold UN observer status. Major non-sovereign territories — Greenland, Puerto Rico, Hong Kong, Western Sahara, Faroe Islands, French Guiana, and others — are visible on the map but grouped under their parent country and not counted in your score.</p>
+
+  <h3>Europe (46)</h3>
+  <ul class="country-grid">
+    <li>Albania</li><li>Andorra</li><li>Austria</li><li>Belarus</li><li>Belgium</li><li>Bosnia and Herzegovina</li><li>Bulgaria</li><li>Croatia</li><li>Cyprus</li><li>Czechia</li><li>Denmark</li><li>Estonia</li><li>Finland</li><li>France</li><li>Germany</li><li>Greece</li><li>Hungary</li><li>Iceland</li><li>Ireland</li><li>Italy</li><li>Kosovo</li><li>Latvia</li><li>Liechtenstein</li><li>Lithuania</li><li>Luxembourg</li><li>Malta</li><li>Moldova</li><li>Monaco</li><li>Montenegro</li><li>Netherlands</li><li>North Macedonia</li><li>Norway</li><li>Poland</li><li>Portugal</li><li>Romania</li><li>San Marino</li><li>Serbia</li><li>Slovakia</li><li>Slovenia</li><li>Spain</li><li>Sweden</li><li>Switzerland</li><li>Ukraine</li><li>United Kingdom</li><li>Vatican City</li>
+  </ul>
+
+  <h3>Africa (54)</h3>
+  <ul class="country-grid">
+    <li>Algeria</li><li>Angola</li><li>Benin</li><li>Botswana</li><li>Burkina Faso</li><li>Burundi</li><li>Cabo Verde</li><li>Cameroon</li><li>Central African Republic</li><li>Chad</li><li>Comoros</li><li>Democratic Republic of the Congo</li><li>Republic of the Congo</li><li>Côte d'Ivoire</li><li>Djibouti</li><li>Egypt</li><li>Equatorial Guinea</li><li>Eritrea</li><li>Eswatini</li><li>Ethiopia</li><li>Gabon</li><li>Gambia</li><li>Ghana</li><li>Guinea</li><li>Guinea-Bissau</li><li>Kenya</li><li>Lesotho</li><li>Liberia</li><li>Libya</li><li>Madagascar</li><li>Malawi</li><li>Mali</li><li>Mauritania</li><li>Mauritius</li><li>Morocco</li><li>Mozambique</li><li>Namibia</li><li>Niger</li><li>Nigeria</li><li>Rwanda</li><li>São Tomé and Príncipe</li><li>Senegal</li><li>Seychelles</li><li>Sierra Leone</li><li>Somalia</li><li>South Africa</li><li>South Sudan</li><li>Sudan</li><li>Tanzania</li><li>Togo</li><li>Tunisia</li><li>Uganda</li><li>Zambia</li><li>Zimbabwe</li>
+  </ul>
+
+  <h3>Asia (49)</h3>
+  <ul class="country-grid">
+    <li>Afghanistan</li><li>Armenia</li><li>Azerbaijan</li><li>Bahrain</li><li>Bangladesh</li><li>Bhutan</li><li>Brunei</li><li>Cambodia</li><li>China</li><li>Georgia</li><li>India</li><li>Indonesia</li><li>Iran</li><li>Iraq</li><li>Israel</li><li>Japan</li><li>Jordan</li><li>Kazakhstan</li><li>Kuwait</li><li>Kyrgyzstan</li><li>Laos</li><li>Lebanon</li><li>Malaysia</li><li>Maldives</li><li>Mongolia</li><li>Myanmar</li><li>Nepal</li><li>North Korea</li><li>Oman</li><li>Pakistan</li><li>Palestine</li><li>Philippines</li><li>Qatar</li><li>Russia</li><li>Saudi Arabia</li><li>Singapore</li><li>South Korea</li><li>Sri Lanka</li><li>Syria</li><li>Taiwan</li><li>Tajikistan</li><li>Thailand</li><li>Timor-Leste</li><li>Turkey</li><li>Turkmenistan</li><li>United Arab Emirates</li><li>Uzbekistan</li><li>Vietnam</li><li>Yemen</li>
+  </ul>
+  <p><em>Russia is grouped under Asia. The country straddles both continents, but the majority of its landmass sits east of the Urals.</em></p>
+
+  <h3>Americas (35)</h3>
+  <ul class="country-grid">
+    <li>Antigua and Barbuda</li><li>Argentina</li><li>Bahamas</li><li>Barbados</li><li>Belize</li><li>Bolivia</li><li>Brazil</li><li>Canada</li><li>Chile</li><li>Colombia</li><li>Costa Rica</li><li>Cuba</li><li>Dominica</li><li>Dominican Republic</li><li>Ecuador</li><li>El Salvador</li><li>Grenada</li><li>Guatemala</li><li>Guyana</li><li>Haiti</li><li>Honduras</li><li>Jamaica</li><li>Mexico</li><li>Nicaragua</li><li>Panama</li><li>Paraguay</li><li>Peru</li><li>Saint Kitts and Nevis</li><li>Saint Lucia</li><li>Saint Vincent and the Grenadines</li><li>Suriname</li><li>Trinidad and Tobago</li><li>United States</li><li>Uruguay</li><li>Venezuela</li>
+  </ul>
+
+  <h3>Oceania (14)</h3>
+  <ul class="country-grid">
+    <li>Australia</li><li>Fiji</li><li>Kiribati</li><li>Marshall Islands</li><li>Micronesia</li><li>Nauru</li><li>New Zealand</li><li>Palau</li><li>Papua New Guinea</li><li>Samoa</li><li>Solomon Islands</li><li>Tonga</li><li>Tuvalu</li><li>Vanuatu</li>
+  </ul>
+
+  <h2>Tips for learning the world map</h2>
+  <ol>
+    <li><strong>Start with a continent you already half-know.</strong> Most people in the West know Europe and the Americas reasonably well. Get those to 100% first — you'll feel the wins, and the feedback loop keeps you going.</li>
+    <li><strong>Africa and Oceania are where most people lose points.</strong> Africa has 54 countries, more than any other continent, and many of its borders look similar. Oceania is full of small island nations that are easy to miss visually. Spend extra time there.</li>
+    <li><strong>Group by region, not alphabet.</strong> Don't try to memorize a flat list. Learn West Africa, then East Africa, then Southern Africa. Spatial chunks stick better than alphabetical ones.</li>
+    <li><strong>Anchor on neighbors.</strong> If you know one country in a region, you can usually triangulate the rest. "Mali is south of Algeria, Burkina Faso is south of Mali, Ghana is south of Burkina Faso."</li>
+    <li><strong>Re-take the quiz weekly.</strong> Geography fades fast if you don't revisit it. A 10-minute pass once a week locks it in long-term.</li>
+    <li><strong>Pay attention to the ones you skip.</strong> When you finish, look at the "skipped" list — those are your blind spots, not the wrong answers. The wrong ones are guesses; the skipped ones are unknowns.</li>
+  </ol>
+
+  <h2>Frequently asked questions</h2>
+
+  <details class="faq-item">
+    <summary>Why 195 countries?</summary>
+    <p>195 is the count of UN-recognized sovereign states: 193 UN member states plus the Holy See (Vatican City) and Palestine, which both hold UN observer status. Other lists exist — some sources count 196 (adding Taiwan), others 197 (adding Kosovo). World Map Test uses the strict UN-observer count.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Is Taiwan included?</summary>
+    <p>Taiwan appears on the map and is listed in the Asia quiz. It's not a UN member state, but it functions as a sovereign country and is recognized that way here.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Why isn't Greenland its own answer?</summary>
+    <p>Greenland is an autonomous territory of the Kingdom of Denmark, not a sovereign state. It's drawn on the map but assigning it counts as Denmark. The same applies to Puerto Rico (United States), Hong Kong (China), French Guiana (France), and other large dependencies.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Why is Russia grouped with Asia?</summary>
+    <p>Russia is transcontinental, but roughly 75% of its landmass lies east of the Ural Mountains, which is the conventional Europe-Asia divide. Including it in Asia keeps the European map quiz tighter and avoids over-weighting one country.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Does the quiz cover capital cities or flags?</summary>
+    <p>Not yet. The current quiz focuses on identifying countries on a map. Capital and flag quizzes may come later.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Does the quiz save my progress?</summary>
+    <p>Your progress within a single session is preserved as long as you don't refresh. Cross-session save is not currently supported — every visit starts fresh.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Can I share my results?</summary>
+    <p>The results screen shows your score and a per-region breakdown. Screenshot it and share — there's no built-in social share at the moment.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>How is World Map Test different from other geography quizzes?</summary>
+    <p>The interface is the difference. Most country-quiz sites either ask you to type names blindly or pin labels onto an unlabeled map with no feedback. World Map Test gives you a clean clickable map, a searchable country list, fly-to navigation, a progress bar, and a detailed results breakdown — all on a single page, no sign-up, no ads.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Where do the country borders come from?</summary>
+    <p>From Natural Earth, a public-domain cartographic dataset, delivered via the world-atlas TopoJSON package. The borders match the standard reference maps used by most news outlets and atlases.</p>
+  </details>
+
+  <details class="faq-item">
+    <summary>Who built this?</summary>
+    <p>World Map Test was built by Nick Eshnaur. It runs entirely in your browser — no server, no database. The site is hosted on GitHub Pages.</p>
+  </details>
+
+  <h2>Ready to play?</h2>
+  <p><a class="play-btn" href="/" style="display:inline-block;margin-top:8px;">Start the world quiz</a> — or jump to a region: <a href="/europe/">Europe</a>, <a href="/africa/">Africa</a>, <a href="/asia/">Asia</a>, <a href="/americas/">Americas</a>, <a href="/oceania/">Oceania</a>.</p>
+</main>
+
+<footer class="site-footer">
+  <p>
+    <a href="/">Home</a> ·
+    <a href="/about/">About</a> ·
+    <a href="/europe/">Europe</a> ·
+    <a href="/africa/">Africa</a> ·
+    <a href="/asia/">Asia</a> ·
+    <a href="/americas/">Americas</a> ·
+    <a href="/oceania/">Oceania</a>
+  </p>
+  <p style="margin-top:8px;">© 2026 World Map Test · <a href="https://worldmaptest.com">worldmaptest.com</a></p>
+</footer>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6T038REP8E"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6T038REP8E');
+</script>
+
+</body>
+</html>
