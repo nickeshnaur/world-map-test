@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" href="/countries-50m.json" as="fetch" type="application/json" crossorigin>
 <title>Americas Map Quiz — Identify All 35 Americas Countries</title>
 <meta name="description" content="Free interactive quiz to identify all 35 countries in North and South America on a map. Click each country and name it. No sign-up. Works on mobile and desktop.">
 <meta name="keywords" content="americas map quiz, north america quiz, south america quiz, american geography quiz, countries of the americas">
@@ -38,9 +38,9 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "World Map Test",
-  "url": "https://worldmaptest.com/",
-  "description": "Interactive world map geography quiz. Identify countries by clicking them on the map.",
+  "name": "Americas Map Quiz",
+  "url": "https://worldmaptest.com/americas/",
+  "description": "Interactive Americas map geography quiz. Identify all 35 countries in Americas by clicking them on the map.",
   "applicationCategory": "EducationalApplication",
   "operatingSystem": "Any",
   "browserRequirements": "Requires JavaScript and a modern browser",
@@ -101,6 +101,16 @@
         "text": "Natural Earth, a public-domain dataset, via the world-atlas TopoJSON package."
       }
     }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "World Map Test", "item": "https://worldmaptest.com/"},
+    {"@type": "ListItem", "position": 2, "name": "Americas Map Quiz", "item": "https://worldmaptest.com/americas/"}
   ]
 }
 </script>
@@ -849,8 +859,8 @@
 <body>
 
 <noscript>
-  <h1>World Map Test — Interactive Country Geography Quiz</h1>
-  <p>Test your geography knowledge with an interactive world map quiz. Click each country on the map and identify it by name. Free to play, works on any modern browser. JavaScript is required to play.</p>
+  <h1>Americas Map Quiz — Identify All 35 Americas Countries</h1>
+  <p>Test your knowledge of geography in the Americas with an interactive map quiz covering all 35 countries in North America, Central America, South America, and the Caribbean. Click each country on the map and identify it by name. Free, no sign-up, works on desktop and mobile.</p>
 </noscript>
 
 <div class="loading-screen" id="loadingScreen">
@@ -862,7 +872,7 @@
 <div class="app-shell">
 <header id="quizHeader">
   <div class="header-left">
-    <h1>World Map Test</h1>
+    <h1>Americas Map Quiz</h1>
     <div class="progress-text">
       <span class="progress-numbers"><span class="js-match-count">0</span> / <span class="js-total-count">0</span></span>
       <div class="progress-bar-container">
@@ -1058,7 +1068,7 @@
 <canvas id="exportCanvas" style="display:none;"></canvas>
 
 <script>
-const GEOJSON_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json';
+const GEOJSON_URL = '/countries-50m.json';
 
 // ===== COUNTRY WHITELIST =====
 const INCLUDE_MAP = {

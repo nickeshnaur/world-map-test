@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" href="/countries-50m.json" as="fetch" type="application/json" crossorigin>
 <title>World Map Test — Interactive Country Geography Quiz</title>
 <meta name="description" content="Test your geography knowledge with an interactive world map quiz. Click each country and identify it by name. Free, no sign-up, works on desktop and mobile.">
 <meta name="keywords" content="world map quiz, country quiz, geography quiz, interactive map, identify countries, world geography test">
@@ -1057,7 +1057,7 @@
 <canvas id="exportCanvas" style="display:none;"></canvas>
 
 <script>
-const GEOJSON_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json';
+const GEOJSON_URL = '/countries-50m.json';
 
 // ===== COUNTRY WHITELIST =====
 const INCLUDE_MAP = {
